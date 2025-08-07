@@ -8,10 +8,15 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>R.DescriptionModelGenerator</PackageId>
         <Version>1.0.0</Version>
-        <Authors>你的名字</Authors>
-        <Company>你的公司</Company>
-        <Description>描述信息</Description>
+        <Authors>redcatH</Authors>
+        <Company>redcatH</Company>
+        <Description>Auto-generate TypeScript types and API clients from ASP.NET Core.</Description>
         <PackageTags>aspnetcore;codegen;descriptionmodel</PackageTags>
+        <PackageProjectUrl>https://github.com/redcatH/R.CodeGenerator</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/redcatH/R.CodeGenerator.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageIconUrl>https://avatars.githubusercontent.com/u/30196697</PackageIconUrl> <!-- 可选，有 logo 时填写 -->
     </PropertyGroup>
 
     <ItemGroup>
