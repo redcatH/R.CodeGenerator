@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Scriban" Version="6.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Templates\ApiFile.sbn">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\R.DescriptionModelGenerator\R.DescriptionModelGenerator.csproj" />
+    </ItemGroup>
+</Project>

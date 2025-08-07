@@ -1,0 +1,7532 @@
+{
+  "apis": [
+    {
+      "controller": "AspNetCoreApiDescriptionModelProvider",
+      "action": "GetApiDescriptionModel",
+      "httpMethod": "GET",
+      "path": "api/AspNetCoreApiDescriptionModelProvider/GetApiDescriptionModel",
+      "parameters": [
+        {
+          "name": "includeTypes",
+          "type": "System.Boolean",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "Microsoft.AspNetCore.Mvc.IActionResult",
+        "typeSimple": "IActionResult"
+      }
+    },
+    {
+      "controller": "Generator",
+      "action": "Index",
+      "httpMethod": "GET",
+      "path": "json",
+      "parameters": [],
+      "retureturnrnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Test",
+      "action": "GetTestParamNull",
+      "httpMethod": "GET",
+      "path": "api/Test/GetTestParamNull",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": true,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Test",
+      "action": "GetTestModel",
+      "httpMethod": null,
+      "path": "api/Test/GetTestModel",
+      "parameters": [
+        {
+          "name": "input",
+          "type": "VividCMS.Generator.ModelInput",
+          "source": "Body",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Generator.TestController+TestModel",
+        "typeSimple": "TestModel"
+      }
+    },
+    {
+      "controller": "Test",
+      "action": "GetTestModelNull",
+      "httpMethod": "GET",
+      "path": "api/Test/GetTestModelNull",
+      "parameters": [
+        {
+          "name": "param",
+          "type": "VividCMS.Generator.TestController.TestModel",
+          "source": "Body",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Auth",
+      "action": "login",
+      "httpMethod": "POST",
+      "path": "auth/login",
+      "parameters": [
+        {
+          "name": "request",
+          "type": "VividCMS.Utilty.db.model.JwtLoginRequest",
+          "source": "Body",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Auth",
+      "action": "refreshtoken",
+      "httpMethod": "POST",
+      "path": "auth/refreshToken",
+      "parameters": [
+        {
+          "name": "request",
+          "type": "VividCMS.Utilty.db.model.RefreshTokenRequest",
+          "source": "Body",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Auth",
+      "action": "getUserInfo",
+      "httpMethod": "GET",
+      "path": "auth/getUserInfo",
+      "parameters": [],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Channel",
+      "action": "list",
+      "httpMethod": "GET",
+      "path": "api/channel/list",
+      "parameters": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "DeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ChannelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Manufacturer",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Address",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "RtspUrl_Live",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "MonitorUrl_Live",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "StreamId_Live",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Type",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "CallId_Live",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ToTag_Live",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Point",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "IsSave",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SnapUrl",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "MediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ParentId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "FromDevice",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "UseParentId",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "UpdateTime",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "limit",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Channel",
+      "action": "noshare",
+      "httpMethod": "GET",
+      "path": "api/channel/noshare",
+      "parameters": [
+        {
+          "name": "gateDeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Channel",
+      "action": "nobind",
+      "httpMethod": "GET",
+      "path": "api/channel/nobind",
+      "parameters": [
+        {
+          "name": "userId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Channel",
+      "action": "edit",
+      "httpMethod": "GET",
+      "path": "api/channel/edit",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "name",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "type",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "isRecord",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "streamId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "parentId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Channel",
+      "action": "snap",
+      "httpMethod": "GET",
+      "path": "api/channel/snap",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "type",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Channel",
+      "action": "delete",
+      "httpMethod": "GET",
+      "path": "api/channel/delete",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Channel",
+      "action": "savestream",
+      "httpMethod": "GET",
+      "path": "api/channel/savestream",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "rtspUrl",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "streamId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Channel",
+      "action": "cancelstream",
+      "httpMethod": "GET",
+      "path": "api/channel/cancelstream",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Channel",
+      "action": "import",
+      "httpMethod": "POST",
+      "path": "api/channel/import",
+      "parameters": [],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Channel",
+      "action": "export",
+      "httpMethod": "GET",
+      "path": "api/channel/export",
+      "parameters": [],
+      "returnType": {
+        "type": "Microsoft.AspNetCore.Mvc.FileResult",
+        "typeSimple": "FileResult"
+      }
+    },
+    {
+      "controller": "Config",
+      "action": "info",
+      "httpMethod": "GET",
+      "path": "api/config/info",
+      "parameters": [],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Config",
+      "action": "submit",
+      "httpMethod": "GET",
+      "path": "api/config/submit",
+      "parameters": [
+        {
+          "name": "LocalIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ListenPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Serial",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Realm",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "AuthMode",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "AuthPwd",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "MediaIPs",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "StreamMode",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "RtspPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "HttpPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Secret",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "WebSocketPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "UdpPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "TcpServerPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "TcpClientPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "CatalogInterval",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "NoWatchToStop",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "InviteModel",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "TransportEncoding",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Mac",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "LicenseCode",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Config",
+      "action": "wsinfo",
+      "httpMethod": "GET",
+      "path": "api/config/wsinfo",
+      "parameters": [],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Config",
+      "action": "allmedia",
+      "httpMethod": "GET",
+      "path": "api/config/allmedia",
+      "parameters": [],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Config",
+      "action": "exit",
+      "httpMethod": "GET",
+      "path": "api/config/exit",
+      "parameters": [],
+      "returnType": {
+        "type": "System.Void",
+        "typeSimple": "Void"
+      }
+    },
+    {
+      "controller": "Config",
+      "action": "cleardb",
+      "httpMethod": "GET",
+      "path": "api/config/cleardb",
+      "parameters": [],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Device",
+      "action": "list",
+      "httpMethod": "GET",
+      "path": "api/device/list",
+      "parameters": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "DeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Ip",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Port",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Protocol",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "HearTime",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "OffTime",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "RegistTime",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ChannelCount",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Manufacturer",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "limit",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Device",
+      "action": "add",
+      "httpMethod": "GET",
+      "path": "api/device/add",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ip",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "port",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "manufacturer",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Device",
+      "action": "edit",
+      "httpMethod": "GET",
+      "path": "api/device/edit",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "name",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Device",
+      "action": "delete",
+      "httpMethod": "GET",
+      "path": "api/device/delete",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Device",
+      "action": "restorechannel",
+      "httpMethod": "GET",
+      "path": "api/device/restorechannel",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Gate",
+      "action": "list",
+      "httpMethod": "GET",
+      "path": "api/gate/list",
+      "parameters": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "GateName",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerDeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerRealm",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerIp",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerUsername",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerPassword",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "GateDeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "KeepAliveInterval",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "RegisterInterval",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "GateEnable",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "PtzEnable",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ProtocolType",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "LocalIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "LocalPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "TransportEncoding",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "limit",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Gate",
+      "action": "add",
+      "httpMethod": "GET",
+      "path": "api/gate/add",
+      "parameters": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "GateName",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerDeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerRealm",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerIp",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerUsername",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerPassword",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "GateDeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "KeepAliveInterval",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "RegisterInterval",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "GateEnable",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "PtzEnable",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ProtocolType",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "LocalIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "LocalPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "TransportEncoding",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Gate",
+      "action": "edit",
+      "httpMethod": "GET",
+      "path": "api/gate/edit",
+      "parameters": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "GateName",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerDeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerRealm",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerIp",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerUsername",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SIPServerPassword",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "GateDeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "KeepAliveInterval",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "RegisterInterval",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "GateEnable",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "PtzEnable",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ProtocolType",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "LocalIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "LocalPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "TransportEncoding",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Gate",
+      "action": "delete",
+      "httpMethod": "GET",
+      "path": "api/gate/delete",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "list",
+      "httpMethod": "GET",
+      "path": "api/gb28181/list",
+      "parameters": [],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "querychannel",
+      "httpMethod": "GET",
+      "path": "api/gb28181/querychannel",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "control",
+      "httpMethod": "GET",
+      "path": "api/gb28181/control",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "cmd",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "speed",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "preset",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "ischannelonline",
+      "httpMethod": "GET",
+      "path": "api/gb28181/ischannelonline",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "checkmediastatus",
+      "httpMethod": "GET",
+      "path": "api/gb28181/checkmediastatus",
+      "parameters": [
+        {
+          "name": "streamId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "live",
+      "httpMethod": "GET",
+      "path": "api/gb28181/live",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "history",
+      "httpMethod": "GET",
+      "path": "api/gb28181/history",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "startTime",
+          "type": "System.Int64",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "endTime",
+          "type": "System.Int64",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "downstart",
+      "httpMethod": "GET",
+      "path": "api/gb28181/downstart",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "startTime",
+          "type": "System.Int64",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "endTime",
+          "type": "System.Int64",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "downloadSpeed",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "startrecord",
+      "httpMethod": "GET",
+      "path": "api/gb28181/startrecord",
+      "parameters": [
+        {
+          "name": "streamId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "max_second",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "stoprecord",
+      "httpMethod": "GET",
+      "path": "api/gb28181/stoprecord",
+      "parameters": [
+        {
+          "name": "streamId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "queryrecord",
+      "httpMethod": "GET",
+      "path": "api/gb28181/queryrecord",
+      "parameters": [
+        {
+          "name": "streamId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "backvideoplaycontrol",
+      "httpMethod": "GET",
+      "path": "api/gb28181/backvideoplaycontrol",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "callId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "toTag",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "backControlType",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "param",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "recordfilequery",
+      "httpMethod": "GET",
+      "path": "api/gb28181/recordfilequery",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "startTime",
+          "type": "System.Int64",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "endTime",
+          "type": "System.Int64",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "playmediafile",
+      "httpMethod": "GET",
+      "path": "api/gb28181/playmediafile",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "type",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "manufacturer",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "talk",
+      "httpMethod": "GET",
+      "path": "api/gb28181/talk",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "manufacturer",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "bye",
+      "httpMethod": "GET",
+      "path": "api/gb28181/bye",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "streamId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "callId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "toTag",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "callType",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "errmsg",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "bye_gate",
+      "httpMethod": "GET",
+      "path": "api/gb28181/bye_gate",
+      "parameters": [
+        {
+          "name": "gateDeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "callId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "toTag",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "GB28181",
+      "action": "control_gate",
+      "httpMethod": "GET",
+      "path": "api/gb28181/control_gate",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "channelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ptzCmd",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "VividCMS.Utility.ResponseExtend",
+        "typeSimple": "ResponseExtend"
+      }
+    },
+    {
+      "controller": "Log",
+      "action": "list",
+      "httpMethod": "GET",
+      "path": "api/log/list",
+      "parameters": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "LogTime",
+          "type": "System.DateTime",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "LogType",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "LogKey",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "LogContent",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "StartTime",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "EndTime",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "limit",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Share",
+      "action": "list",
+      "httpMethod": "GET",
+      "path": "api/share/list",
+      "parameters": [
+        {
+          "name": "gateDeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "limit",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Share",
+      "action": "batchbind",
+      "httpMethod": "GET",
+      "path": "api/share/batchbind",
+      "parameters": [
+        {
+          "name": "gateDeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "idsStr",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Share",
+      "action": "batchdel",
+      "httpMethod": "GET",
+      "path": "api/share/batchdel",
+      "parameters": [
+        {
+          "name": "gateDeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "idsStr",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "StreamProxy",
+      "action": "list",
+      "httpMethod": "GET",
+      "path": "api/streamproxy/list",
+      "parameters": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "StreamPath",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SourcePath",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "IsSave",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "StreamType",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "MonitorUrl",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "RtspUrl",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "StreamId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Error",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "VideoDecode",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Dpi",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Fps",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "AudiodeCode",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SampleBit",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "SampleRate",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "UpdateTime",
+          "type": "System.DateTime",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "MediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "limit",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "StreamProxy",
+      "action": "add",
+      "httpMethod": "GET",
+      "path": "api/streamproxy/add",
+      "parameters": [
+        {
+          "name": "streamPath",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "sourcePath",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "isSave",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "streamId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "StreamProxy",
+      "action": "edit",
+      "httpMethod": "GET",
+      "path": "api/streamproxy/edit",
+      "parameters": [
+        {
+          "name": "streamPath",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "sourcePath",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "streamType",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "isSave",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "StreamProxy",
+      "action": "delete",
+      "httpMethod": "GET",
+      "path": "api/streamproxy/delete",
+      "parameters": [
+        {
+          "name": "streamPath",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "streamId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "streamType",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "StreamProxy",
+      "action": "checkstreamstatus",
+      "httpMethod": "GET",
+      "path": "api/streamproxy/checkstreamstatus",
+      "parameters": [
+        {
+          "name": "app",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "stream",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "StreamProxy",
+      "action": "live",
+      "httpMethod": "GET",
+      "path": "api/streamproxy/live",
+      "parameters": [
+        {
+          "name": "streamPath",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "sourcePath",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "StreamProxy",
+      "action": "clearGB",
+      "httpMethod": "GET",
+      "path": "api/streamproxy/clearGB",
+      "parameters": [],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "StreamProxy",
+      "action": "streaminfo",
+      "httpMethod": "GET",
+      "path": "api/streamproxy/streaminfo",
+      "parameters": [
+        {
+          "name": "streamPath",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "mediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "StreamSource",
+      "action": "list",
+      "httpMethod": "GET",
+      "path": "api/streamsource/list",
+      "parameters": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "DeviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ChannelId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "StreamId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "CallId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ToTag",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "CallType",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "MonitorUrl",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "RtspUrl",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "UpdateTime",
+          "type": "System.DateTime",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "MediaSsrc",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "MediaPort",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "DeviceId_Gate",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "CallId_Gate",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ToTag_Gate",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "IsBye",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "MediaIP",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Error",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "limit",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "StreamSource",
+      "action": "delete",
+      "httpMethod": "GET",
+      "path": "api/streamsource/delete",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "System",
+      "action": "info",
+      "httpMethod": "GET",
+      "path": "api/system/info",
+      "parameters": [],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "UserChannel",
+      "action": "list",
+      "httpMethod": "GET",
+      "path": "api/userchannel/list",
+      "parameters": [
+        {
+          "name": "userId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "limit",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "UserChannel",
+      "action": "batchbind",
+      "httpMethod": "GET",
+      "path": "api/userchannel/batchbind",
+      "parameters": [
+        {
+          "name": "userId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "idsStr",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "UserChannel",
+      "action": "batchdel",
+      "httpMethod": "GET",
+      "path": "api/userchannel/batchdel",
+      "parameters": [
+        {
+          "name": "userId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "idsStr",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "User",
+      "action": "list",
+      "httpMethod": "GET",
+      "path": "api/user/list",
+      "parameters": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "UserId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "UserName",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Password",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "IsEnable",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Role",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "CreateId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "limit",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "User",
+      "action": "add",
+      "httpMethod": "GET",
+      "path": "api/user/add",
+      "parameters": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "UserId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "UserName",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Password",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "IsEnable",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Role",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "CreateId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "User",
+      "action": "edit",
+      "httpMethod": "GET",
+      "path": "api/user/edit",
+      "parameters": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "UserId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "UserName",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Password",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "IsEnable",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "Role",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "CreateId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "User",
+      "action": "delete",
+      "httpMethod": "GET",
+      "path": "api/user/delete",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "User",
+      "action": "login",
+      "httpMethod": "GET",
+      "path": "api/user/login",
+      "parameters": [
+        {
+          "name": "userid",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "password",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "User",
+      "action": "getuserinfo",
+      "httpMethod": "GET",
+      "path": "api/user/getuserinfo",
+      "parameters": [],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "User",
+      "action": "updatepassword",
+      "httpMethod": "GET",
+      "path": "api/user/updatepassword",
+      "parameters": [
+        {
+          "name": "newpassword",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "User",
+      "action": "logout",
+      "httpMethod": "GET",
+      "path": "api/user/logout",
+      "parameters": [],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Version",
+      "action": "info",
+      "httpMethod": "GET",
+      "path": "api/version/info",
+      "parameters": [],
+      "returnType": {
+        "type": "System.String",
+        "typeSimple": "String"
+      }
+    },
+    {
+      "controller": "Device",
+      "action": "GetDeviceList",
+      "httpMethod": "GET",
+      "path": "api/v2/device/list",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "ip",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "manufacturer",
+          "type": "System.String",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "page",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        },
+        {
+          "name": "pageSize",
+          "type": "System.Int32",
+          "source": "Query",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "Microsoft.AspNetCore.Mvc.IActionResult",
+        "typeSimple": "IActionResult"
+      }
+    },
+    {
+      "controller": "Device",
+      "action": "AddDevice",
+      "httpMethod": "POST",
+      "path": "api/v2/device/add",
+      "parameters": [
+        {
+          "name": "request",
+          "type": "VividCMS.Controllers.V2.AddDeviceRequest",
+          "source": "Body",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "Microsoft.AspNetCore.Mvc.IActionResult",
+        "typeSimple": "IActionResult"
+      }
+    },
+    {
+      "controller": "Device",
+      "action": "EditDevice",
+      "httpMethod": "POST",
+      "path": "api/v2/device/edit",
+      "parameters": [
+        {
+          "name": "request",
+          "type": "VividCMS.Controllers.V2.EditDeviceRequest",
+          "source": "Body",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "Microsoft.AspNetCore.Mvc.IActionResult",
+        "typeSimple": "IActionResult"
+      }
+    },
+    {
+      "controller": "Device",
+      "action": "DeleteDevice",
+      "httpMethod": "DELETE",
+      "path": "api/v2/device/{deviceId}",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Path",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "Microsoft.AspNetCore.Mvc.IActionResult",
+        "typeSimple": "IActionResult"
+      }
+    },
+    {
+      "controller": "Device",
+      "action": "GetDevice",
+      "httpMethod": "GET",
+      "path": "api/v2/device/{deviceId}",
+      "parameters": [
+        {
+          "name": "deviceId",
+          "type": "System.String",
+          "source": "Path",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "Microsoft.AspNetCore.Mvc.IActionResult",
+        "typeSimple": "IActionResult"
+      }
+    },
+    {
+      "controller": "Device",
+      "action": "RestoreChannel",
+      "httpMethod": "POST",
+      "path": "api/v2/device/restore-channel",
+      "parameters": [
+        {
+          "name": "request",
+          "type": "VividCMS.Controllers.V2.RestoreChannelRequest",
+          "source": "Body",
+          "isOptional": false,
+          "defaultValue": null
+        }
+      ],
+      "returnType": {
+        "type": "Microsoft.AspNetCore.Mvc.IActionResult",
+        "typeSimple": "IActionResult"
+      }
+    }
+  ],
+  "types": {
+    "Microsoft.AspNetCore.Mvc.IActionResult": {
+      "name": "IActionResult",
+      "namespace": "Microsoft.AspNetCore.Mvc",
+      "properties": []
+    },
+    "VividCMS.Generator.ModelInput": {
+      "name": "ModelInput",
+      "namespace": "VividCMS.Generator",
+      "properties": [
+        {
+          "name": "i",
+          "type": "System.Nullable<System.Int32>",
+          "isNullable": true,
+          "isRequired": false
+        }
+      ]
+    },
+    "System.Threading.Tasks.Task<VividCMS.Generator.TestController.TestModel>": {
+      "name": "Task`1",
+      "namespace": "System.Threading.Tasks",
+      "properties": [
+        {
+          "name": "Result",
+          "type": "VividCMS.Generator.TestController.TestModel",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Exception",
+          "type": "System.AggregateException",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Status",
+          "type": "System.Threading.Tasks.TaskStatus",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCanceled",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCompleted",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCompletedSuccessfully",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CreationOptions",
+          "type": "System.Threading.Tasks.TaskCreationOptions",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "AsyncState",
+          "type": "System.Object",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "IsFaulted",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "VividCMS.Generator.TestController.TestModel": {
+      "name": "TestModel",
+      "namespace": "VividCMS.Generator",
+      "properties": [
+        {
+          "name": "Type",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": true
+        },
+        {
+          "name": "ChildeModel",
+          "type": "VividCMS.Generator.TestController.ChildeModel",
+          "isNullable": true,
+          "isRequired": false
+        }
+      ]
+    },
+    "VividCMS.Generator.TestController.ChildeModel": {
+      "name": "ChildeModel",
+      "namespace": "VividCMS.Generator",
+      "properties": [
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        }
+      ]
+    },
+    "System.AggregateException": {
+      "name": "AggregateException",
+      "namespace": "System",
+      "properties": [
+        {
+          "name": "InnerExceptions",
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection<System.Exception>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Message",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "TargetSite",
+          "type": "System.Reflection.MethodBase",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Data",
+          "type": "System.Collections.IDictionary",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "InnerException",
+          "type": "System.Exception",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "HelpLink",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Source",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "HResult",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "StackTrace",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        }
+      ]
+    },
+    "System.Exception": {
+      "name": "Exception",
+      "namespace": "System",
+      "properties": [
+        {
+          "name": "TargetSite",
+          "type": "System.Reflection.MethodBase",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Message",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Data",
+          "type": "System.Collections.IDictionary",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "InnerException",
+          "type": "System.Exception",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "HelpLink",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Source",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "HResult",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "StackTrace",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        }
+      ]
+    },
+    "System.Reflection.MethodBase": {
+      "name": "MethodBase",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "Attributes",
+          "type": "System.Reflection.MethodAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MethodImplementationFlags",
+          "type": "System.Reflection.MethodImplAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CallingConvention",
+          "type": "System.Reflection.CallingConventions",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAbstract",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsConstructor",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFinal",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsHideBySig",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSpecialName",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsStatic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsVirtual",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamily",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamilyAndAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamilyOrAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPrivate",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPublic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsConstructedGenericMethod",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericMethod",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericMethodDefinition",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "ContainsGenericParameters",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MethodHandle",
+          "type": "System.RuntimeMethodHandle",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecuritySafeCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityTransparent",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MemberType",
+          "type": "System.Reflection.MemberTypes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaringType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "ReflectedType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Module",
+          "type": "System.Reflection.Module",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsCollectible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MetadataToken",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.MethodAttributes": {
+      "name": "MethodAttributes",
+      "namespace": "System.Reflection",
+      "properties": []
+    },
+    "System.Enum": {
+      "name": "Enum",
+      "namespace": "System",
+      "properties": []
+    },
+    "System.ValueType": {
+      "name": "ValueType",
+      "namespace": "System",
+      "properties": []
+    },
+    "System.Reflection.MethodImplAttributes": {
+      "name": "MethodImplAttributes",
+      "namespace": "System.Reflection",
+      "properties": []
+    },
+    "System.Reflection.CallingConventions": {
+      "name": "CallingConventions",
+      "namespace": "System.Reflection",
+      "properties": []
+    },
+    "System.RuntimeMethodHandle": {
+      "name": "RuntimeMethodHandle",
+      "namespace": "System",
+      "properties": [
+        {
+          "name": "Value",
+          "type": "System.IntPtr",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.MemberTypes": {
+      "name": "MemberTypes",
+      "namespace": "System.Reflection",
+      "properties": []
+    },
+    "System.Type": {
+      "name": "Type",
+      "namespace": "System",
+      "properties": [
+        {
+          "name": "IsInterface",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MemberType",
+          "type": "System.Reflection.MemberTypes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Namespace",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "AssemblyQualifiedName",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "FullName",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Assembly",
+          "type": "System.Reflection.Assembly",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Module",
+          "type": "System.Reflection.Module",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsNested",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "DeclaringType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaringMethod",
+          "type": "System.Reflection.MethodBase",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "ReflectedType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "UnderlyingSystemType",
+          "type": "System.Type",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsTypeDefinition",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsArray",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsByRef",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPointer",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsConstructedGenericType",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericParameter",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericTypeParameter",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericMethodParameter",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericType",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericTypeDefinition",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSZArray",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsVariableBoundArray",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsByRefLike",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFunctionPointer",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsUnmanagedFunctionPointer",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "HasElementType",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "GenericTypeArguments",
+          "type": "System.Type[]",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "GenericParameterPosition",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "GenericParameterAttributes",
+          "type": "System.Reflection.GenericParameterAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Attributes",
+          "type": "System.Reflection.TypeAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAbstract",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsImport",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSealed",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSpecialName",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsClass",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedFamANDAssem",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedFamily",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedFamORAssem",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedPrivate",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedPublic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNotPublic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPublic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAutoLayout",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsExplicitLayout",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsLayoutSequential",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAnsiClass",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAutoClass",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsUnicodeClass",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCOMObject",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsContextful",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsEnum",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsMarshalByRef",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPrimitive",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsValueType",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSignatureType",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecuritySafeCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityTransparent",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "StructLayoutAttribute",
+          "type": "System.Runtime.InteropServices.StructLayoutAttribute",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "TypeInitializer",
+          "type": "System.Reflection.ConstructorInfo",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "TypeHandle",
+          "type": "System.RuntimeTypeHandle",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "GUID",
+          "type": "System.Guid",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "BaseType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "IsSerializable",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "ContainsGenericParameters",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsVisible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsCollectible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MetadataToken",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.Assembly": {
+      "name": "Assembly",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "DefinedTypes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.TypeInfo>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ExportedTypes",
+          "type": "System.Collections.Generic.IEnumerable<System.Type>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CodeBase",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "EntryPoint",
+          "type": "System.Reflection.MethodInfo",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "FullName",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "ImageRuntimeVersion",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsDynamic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Location",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ReflectionOnly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCollectible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFullyTrusted",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "EscapedCodeBase",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ManifestModule",
+          "type": "System.Reflection.Module",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Modules",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.Module>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "GlobalAssemblyCache",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "HostContext",
+          "type": "System.Int64",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "SecurityRuleSet",
+          "type": "System.Security.SecurityRuleSet",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.TypeInfo": {
+      "name": "TypeInfo",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "GenericTypeParameters",
+          "type": "System.Type[]",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaredConstructors",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.ConstructorInfo>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaredEvents",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.EventInfo>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaredFields",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.FieldInfo>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaredMembers",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.MemberInfo>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaredMethods",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.MethodInfo>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaredNestedTypes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.TypeInfo>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaredProperties",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.PropertyInfo>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ImplementedInterfaces",
+          "type": "System.Collections.Generic.IEnumerable<System.Type>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsInterface",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MemberType",
+          "type": "System.Reflection.MemberTypes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Namespace",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "AssemblyQualifiedName",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "FullName",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Assembly",
+          "type": "System.Reflection.Assembly",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Module",
+          "type": "System.Reflection.Module",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsNested",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "DeclaringType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaringMethod",
+          "type": "System.Reflection.MethodBase",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "ReflectedType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "UnderlyingSystemType",
+          "type": "System.Type",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsTypeDefinition",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsArray",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsByRef",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPointer",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsConstructedGenericType",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericParameter",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericTypeParameter",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericMethodParameter",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericType",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericTypeDefinition",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSZArray",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsVariableBoundArray",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsByRefLike",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFunctionPointer",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsUnmanagedFunctionPointer",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "HasElementType",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "GenericTypeArguments",
+          "type": "System.Type[]",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "GenericParameterPosition",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "GenericParameterAttributes",
+          "type": "System.Reflection.GenericParameterAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Attributes",
+          "type": "System.Reflection.TypeAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAbstract",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsImport",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSealed",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSpecialName",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsClass",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedFamANDAssem",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedFamily",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedFamORAssem",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedPrivate",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNestedPublic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNotPublic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPublic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAutoLayout",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsExplicitLayout",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsLayoutSequential",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAnsiClass",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAutoClass",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsUnicodeClass",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCOMObject",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsContextful",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsEnum",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsMarshalByRef",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPrimitive",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsValueType",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSignatureType",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecuritySafeCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityTransparent",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "StructLayoutAttribute",
+          "type": "System.Runtime.InteropServices.StructLayoutAttribute",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "TypeInitializer",
+          "type": "System.Reflection.ConstructorInfo",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "TypeHandle",
+          "type": "System.RuntimeTypeHandle",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "GUID",
+          "type": "System.Guid",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "BaseType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "IsSerializable",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "ContainsGenericParameters",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsVisible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsCollectible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MetadataToken",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.ConstructorInfo": {
+      "name": "ConstructorInfo",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "MemberType",
+          "type": "System.Reflection.MemberTypes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Attributes",
+          "type": "System.Reflection.MethodAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MethodImplementationFlags",
+          "type": "System.Reflection.MethodImplAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CallingConvention",
+          "type": "System.Reflection.CallingConventions",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAbstract",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsConstructor",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFinal",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsHideBySig",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSpecialName",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsStatic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsVirtual",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamily",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamilyAndAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamilyOrAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPrivate",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPublic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsConstructedGenericMethod",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericMethod",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericMethodDefinition",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "ContainsGenericParameters",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MethodHandle",
+          "type": "System.RuntimeMethodHandle",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecuritySafeCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityTransparent",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaringType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "ReflectedType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Module",
+          "type": "System.Reflection.Module",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsCollectible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MetadataToken",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.Module": {
+      "name": "Module",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "Assembly",
+          "type": "System.Reflection.Assembly",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "FullyQualifiedName",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "MDStreamVersion",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "ModuleVersionId",
+          "type": "System.Guid",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "ScopeName",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ModuleHandle",
+          "type": "System.ModuleHandle",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "MetadataToken",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Guid": {
+      "name": "Guid",
+      "namespace": "System",
+      "properties": []
+    },
+    "System.ModuleHandle": {
+      "name": "ModuleHandle",
+      "namespace": "System",
+      "properties": [
+        {
+          "name": "MDStreamVersion",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.CustomAttributeData": {
+      "name": "CustomAttributeData",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "AttributeType",
+          "type": "System.Type",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Constructor",
+          "type": "System.Reflection.ConstructorInfo",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ConstructorArguments",
+          "type": "System.Collections.Generic.IList<System.Reflection.CustomAttributeTypedArgument>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "NamedArguments",
+          "type": "System.Collections.Generic.IList<System.Reflection.CustomAttributeNamedArgument>",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "System.Reflection.CustomAttributeTypedArgument": {
+      "name": "CustomAttributeTypedArgument",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "ArgumentType",
+          "type": "System.Type",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Value",
+          "type": "System.Object",
+          "isNullable": true,
+          "isRequired": false
+        }
+      ]
+    },
+    "System.Reflection.CustomAttributeNamedArgument": {
+      "name": "CustomAttributeNamedArgument",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "MemberInfo",
+          "type": "System.Reflection.MemberInfo",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "TypedValue",
+          "type": "System.Reflection.CustomAttributeTypedArgument",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MemberName",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsField",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.MemberInfo": {
+      "name": "MemberInfo",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "MemberType",
+          "type": "System.Reflection.MemberTypes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaringType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "ReflectedType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Module",
+          "type": "System.Reflection.Module",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsCollectible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MetadataToken",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.EventInfo": {
+      "name": "EventInfo",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "MemberType",
+          "type": "System.Reflection.MemberTypes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Attributes",
+          "type": "System.Reflection.EventAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSpecialName",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "AddMethod",
+          "type": "System.Reflection.MethodInfo",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "RemoveMethod",
+          "type": "System.Reflection.MethodInfo",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "RaiseMethod",
+          "type": "System.Reflection.MethodInfo",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "IsMulticast",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "EventHandlerType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaringType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "ReflectedType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Module",
+          "type": "System.Reflection.Module",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsCollectible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MetadataToken",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.EventAttributes": {
+      "name": "EventAttributes",
+      "namespace": "System.Reflection",
+      "properties": []
+    },
+    "System.Reflection.MethodInfo": {
+      "name": "MethodInfo",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "MemberType",
+          "type": "System.Reflection.MemberTypes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "ReturnParameter",
+          "type": "System.Reflection.ParameterInfo",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ReturnType",
+          "type": "System.Type",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ReturnTypeCustomAttributes",
+          "type": "System.Reflection.ICustomAttributeProvider",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Attributes",
+          "type": "System.Reflection.MethodAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MethodImplementationFlags",
+          "type": "System.Reflection.MethodImplAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CallingConvention",
+          "type": "System.Reflection.CallingConventions",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAbstract",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsConstructor",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFinal",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsHideBySig",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSpecialName",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsStatic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsVirtual",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamily",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamilyAndAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamilyOrAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPrivate",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPublic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsConstructedGenericMethod",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericMethod",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsGenericMethodDefinition",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "ContainsGenericParameters",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MethodHandle",
+          "type": "System.RuntimeMethodHandle",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecuritySafeCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityTransparent",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaringType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "ReflectedType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Module",
+          "type": "System.Reflection.Module",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsCollectible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MetadataToken",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.ParameterInfo": {
+      "name": "ParameterInfo",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "Attributes",
+          "type": "System.Reflection.ParameterAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Member",
+          "type": "System.Reflection.MemberInfo",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "ParameterType",
+          "type": "System.Type",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Position",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsIn",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsLcid",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsOptional",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsOut",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsRetval",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "DefaultValue",
+          "type": "System.Object",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "RawDefaultValue",
+          "type": "System.Object",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "HasDefaultValue",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "MetadataToken",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.ParameterAttributes": {
+      "name": "ParameterAttributes",
+      "namespace": "System.Reflection",
+      "properties": []
+    },
+    "System.Reflection.ICustomAttributeProvider": {
+      "name": "ICustomAttributeProvider",
+      "namespace": "System.Reflection",
+      "properties": []
+    },
+    "System.Reflection.FieldInfo": {
+      "name": "FieldInfo",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "MemberType",
+          "type": "System.Reflection.MemberTypes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Attributes",
+          "type": "System.Reflection.FieldAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "FieldType",
+          "type": "System.Type",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsInitOnly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsLiteral",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsNotSerialized",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPinvokeImpl",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSpecialName",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsStatic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamily",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamilyAndAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsFamilyOrAssembly",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPrivate",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsPublic",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecuritySafeCritical",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSecurityTransparent",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "FieldHandle",
+          "type": "System.RuntimeFieldHandle",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaringType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "ReflectedType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Module",
+          "type": "System.Reflection.Module",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsCollectible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MetadataToken",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.FieldAttributes": {
+      "name": "FieldAttributes",
+      "namespace": "System.Reflection",
+      "properties": []
+    },
+    "System.RuntimeFieldHandle": {
+      "name": "RuntimeFieldHandle",
+      "namespace": "System",
+      "properties": [
+        {
+          "name": "Value",
+          "type": "System.IntPtr",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.PropertyInfo": {
+      "name": "PropertyInfo",
+      "namespace": "System.Reflection",
+      "properties": [
+        {
+          "name": "MemberType",
+          "type": "System.Reflection.MemberTypes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "PropertyType",
+          "type": "System.Type",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Attributes",
+          "type": "System.Reflection.PropertyAttributes",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsSpecialName",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CanRead",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CanWrite",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "GetMethod",
+          "type": "System.Reflection.MethodInfo",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "SetMethod",
+          "type": "System.Reflection.MethodInfo",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "DeclaringType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "ReflectedType",
+          "type": "System.Type",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Module",
+          "type": "System.Reflection.Module",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CustomAttributes",
+          "type": "System.Collections.Generic.IEnumerable<System.Reflection.CustomAttributeData>",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsCollectible",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MetadataToken",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Reflection.PropertyAttributes": {
+      "name": "PropertyAttributes",
+      "namespace": "System.Reflection",
+      "properties": []
+    },
+    "System.Reflection.GenericParameterAttributes": {
+      "name": "GenericParameterAttributes",
+      "namespace": "System.Reflection",
+      "properties": []
+    },
+    "System.Reflection.TypeAttributes": {
+      "name": "TypeAttributes",
+      "namespace": "System.Reflection",
+      "properties": []
+    },
+    "System.Runtime.InteropServices.StructLayoutAttribute": {
+      "name": "StructLayoutAttribute",
+      "namespace": "System.Runtime.InteropServices",
+      "properties": [
+        {
+          "name": "Value",
+          "type": "System.Runtime.InteropServices.LayoutKind",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "TypeId",
+          "type": "System.Object",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "System.Runtime.InteropServices.LayoutKind": {
+      "name": "LayoutKind",
+      "namespace": "System.Runtime.InteropServices",
+      "properties": []
+    },
+    "System.Attribute": {
+      "name": "Attribute",
+      "namespace": "System",
+      "properties": [
+        {
+          "name": "TypeId",
+          "type": "System.Object",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "System.RuntimeTypeHandle": {
+      "name": "RuntimeTypeHandle",
+      "namespace": "System",
+      "properties": [
+        {
+          "name": "Value",
+          "type": "System.IntPtr",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Security.SecurityRuleSet": {
+      "name": "SecurityRuleSet",
+      "namespace": "System.Security",
+      "properties": []
+    },
+    "System.Threading.Tasks.TaskStatus": {
+      "name": "TaskStatus",
+      "namespace": "System.Threading.Tasks",
+      "properties": []
+    },
+    "System.Threading.Tasks.TaskCreationOptions": {
+      "name": "TaskCreationOptions",
+      "namespace": "System.Threading.Tasks",
+      "properties": []
+    },
+    "System.Threading.Tasks.Task": {
+      "name": "Task",
+      "namespace": "System.Threading.Tasks",
+      "properties": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Exception",
+          "type": "System.AggregateException",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Status",
+          "type": "System.Threading.Tasks.TaskStatus",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCanceled",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCompleted",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCompletedSuccessfully",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CreationOptions",
+          "type": "System.Threading.Tasks.TaskCreationOptions",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "AsyncState",
+          "type": "System.Object",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "IsFaulted",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "VividCMS.Utilty.db.model.JwtLoginRequest": {
+      "name": "JwtLoginRequest",
+      "namespace": "VividCMS.Utilty.db.model",
+      "properties": [
+        {
+          "name": "userName",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "password",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "VividCMS.Utilty.db.model.RefreshTokenRequest": {
+      "name": "RefreshTokenRequest",
+      "namespace": "VividCMS.Utilty.db.model",
+      "properties": [
+        {
+          "name": "refreshToken",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "VividCMS.Utilty.db.dto.ChannelDto": {
+      "name": "ChannelDto",
+      "namespace": "VividCMS.Utilty.db.dto",
+      "properties": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "DeviceId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ChannelId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Manufacturer",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Address",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "RtspUrl_Live",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "MonitorUrl_Live",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "StreamId_Live",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Type",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CallId_Live",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ToTag_Live",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Point",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsSave",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "SnapUrl",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "MediaIP",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ParentId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "FromDevice",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "UseParentId",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "UpdateTime",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "Microsoft.AspNetCore.Mvc.FileResult": {
+      "name": "FileResult",
+      "namespace": "Microsoft.AspNetCore.Mvc",
+      "properties": [
+        {
+          "name": "ContentType",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "FileDownloadName",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "LastModified",
+          "type": "System.Nullable<System.DateTimeOffset>",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "EntityTag",
+          "type": "Microsoft.Net.Http.Headers.EntityTagHeaderValue",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "EnableRangeProcessing",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.DateTimeOffset": {
+      "name": "DateTimeOffset",
+      "namespace": "System",
+      "properties": [
+        {
+          "name": "DateTime",
+          "type": "System.DateTime",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "UtcDateTime",
+          "type": "System.DateTime",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "LocalDateTime",
+          "type": "System.DateTime",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Date",
+          "type": "System.DateTime",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Day",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "DayOfWeek",
+          "type": "System.DayOfWeek",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "DayOfYear",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Hour",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Millisecond",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Microsecond",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Nanosecond",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Minute",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Month",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Offset",
+          "type": "System.TimeSpan",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "TotalOffsetMinutes",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Second",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Ticks",
+          "type": "System.Int64",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "UtcTicks",
+          "type": "System.Int64",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "TimeOfDay",
+          "type": "System.TimeSpan",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Year",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.DateTime": {
+      "name": "DateTime",
+      "namespace": "System",
+      "properties": [
+        {
+          "name": "Date",
+          "type": "System.DateTime",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Day",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "DayOfWeek",
+          "type": "System.DayOfWeek",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "DayOfYear",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Hour",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Kind",
+          "type": "System.DateTimeKind",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Millisecond",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Microsecond",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Nanosecond",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Minute",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Month",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Second",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Ticks",
+          "type": "System.Int64",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "TimeOfDay",
+          "type": "System.TimeSpan",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Year",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.DayOfWeek": {
+      "name": "DayOfWeek",
+      "namespace": "System",
+      "properties": []
+    },
+    "System.DateTimeKind": {
+      "name": "DateTimeKind",
+      "namespace": "System",
+      "properties": []
+    },
+    "System.TimeSpan": {
+      "name": "TimeSpan",
+      "namespace": "System",
+      "properties": [
+        {
+          "name": "Ticks",
+          "type": "System.Int64",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Days",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Hours",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Milliseconds",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Microseconds",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Nanoseconds",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Minutes",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Seconds",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "TotalDays",
+          "type": "System.Double",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "TotalHours",
+          "type": "System.Double",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "TotalMilliseconds",
+          "type": "System.Double",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "TotalMicroseconds",
+          "type": "System.Double",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "TotalNanoseconds",
+          "type": "System.Double",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "TotalMinutes",
+          "type": "System.Double",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "TotalSeconds",
+          "type": "System.Double",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "Microsoft.Net.Http.Headers.EntityTagHeaderValue": {
+      "name": "EntityTagHeaderValue",
+      "namespace": "Microsoft.Net.Http.Headers",
+      "properties": [
+        {
+          "name": "Tag",
+          "type": "Microsoft.Extensions.Primitives.StringSegment",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsWeak",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "Microsoft.Extensions.Primitives.StringSegment": {
+      "name": "StringSegment",
+      "namespace": "Microsoft.Extensions.Primitives",
+      "properties": [
+        {
+          "name": "Buffer",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Offset",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Length",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Value",
+          "type": "System.String",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "HasValue",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Item",
+          "type": "System.Char",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "Microsoft.AspNetCore.Mvc.ActionResult": {
+      "name": "ActionResult",
+      "namespace": "Microsoft.AspNetCore.Mvc",
+      "properties": []
+    },
+    "VividCMS.Utilty.db.model.Device": {
+      "name": "Device",
+      "namespace": "VividCMS.Utilty.db.model",
+      "properties": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "DeviceId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Ip",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Port",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Protocol",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "HearTime",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "OffTime",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "RegistTime",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ChannelCount",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Manufacturer",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "VividCMS.Utilty.db.model.Gate": {
+      "name": "Gate",
+      "namespace": "VividCMS.Utilty.db.model",
+      "properties": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "GateName",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "SIPServerDeviceId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "SIPServerRealm",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "SIPServerIp",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "SIPServerPort",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "SIPServerUsername",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "SIPServerPassword",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "GateDeviceId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "KeepAliveInterval",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "RegisterInterval",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "GateEnable",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "PtzEnable",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ProtocolType",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "LocalIP",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "LocalPort",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "TransportEncoding",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "VividCMS.Utility.ResponseExtend": {
+      "name": "ResponseExtend",
+      "namespace": "VividCMS.Utility",
+      "properties": [
+        {
+          "name": "code",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "msg",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "System.Threading.Tasks.Task<VividCMS.Utility.ResponseExtend>": {
+      "name": "Task`1",
+      "namespace": "System.Threading.Tasks",
+      "properties": [
+        {
+          "name": "Result",
+          "type": "VividCMS.Utility.ResponseExtend",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Exception",
+          "type": "System.AggregateException",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Status",
+          "type": "System.Threading.Tasks.TaskStatus",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCanceled",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCompleted",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCompletedSuccessfully",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CreationOptions",
+          "type": "System.Threading.Tasks.TaskCreationOptions",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "AsyncState",
+          "type": "System.Object",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "IsFaulted",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "System.Threading.Tasks.Task<System.String>": {
+      "name": "Task`1",
+      "namespace": "System.Threading.Tasks",
+      "properties": [
+        {
+          "name": "Result",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Exception",
+          "type": "System.AggregateException",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Status",
+          "type": "System.Threading.Tasks.TaskStatus",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCanceled",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCompleted",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCompletedSuccessfully",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CreationOptions",
+          "type": "System.Threading.Tasks.TaskCreationOptions",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "AsyncState",
+          "type": "System.Object",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "IsFaulted",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "VividCMS.Utilty.db.model.LogDto": {
+      "name": "LogDto",
+      "namespace": "VividCMS.Utilty.db.model",
+      "properties": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "LogTime",
+          "type": "System.DateTime",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "LogType",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "LogKey",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "LogContent",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "StartTime",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "EndTime",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "VividCMS.Utilty.db.model.StreamProxy": {
+      "name": "StreamProxy",
+      "namespace": "VividCMS.Utilty.db.model",
+      "properties": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "StreamPath",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "SourcePath",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsSave",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "StreamType",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "MonitorUrl",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "RtspUrl",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "StreamId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Error",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "VideoDecode",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Dpi",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Fps",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "AudiodeCode",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "SampleBit",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "SampleRate",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "UpdateTime",
+          "type": "System.DateTime",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MediaIP",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "VividCMS.Utilty.db.model.StreamSource": {
+      "name": "StreamSource",
+      "namespace": "VividCMS.Utilty.db.model",
+      "properties": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "DeviceId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ChannelId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "StreamId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CallId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ToTag",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CallType",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MonitorUrl",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "RtspUrl",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "UpdateTime",
+          "type": "System.DateTime",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MediaSsrc",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "MediaPort",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "DeviceId_Gate",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CallId_Gate",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ToTag_Gate",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsBye",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "MediaIP",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Status",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Error",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "VividCMS.Utilty.db.model.User": {
+      "name": "User",
+      "namespace": "VividCMS.Utilty.db.model",
+      "properties": [
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "UserId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "UserName",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Password",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "IsEnable",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Role",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "CreateId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult>": {
+      "name": "Task`1",
+      "namespace": "System.Threading.Tasks",
+      "properties": [
+        {
+          "name": "Result",
+          "type": "Microsoft.AspNetCore.Mvc.IActionResult",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Id",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Exception",
+          "type": "System.AggregateException",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "Status",
+          "type": "System.Threading.Tasks.TaskStatus",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCanceled",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCompleted",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "IsCompletedSuccessfully",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "CreationOptions",
+          "type": "System.Threading.Tasks.TaskCreationOptions",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "AsyncState",
+          "type": "System.Object",
+          "isNullable": true,
+          "isRequired": false
+        },
+        {
+          "name": "IsFaulted",
+          "type": "System.Boolean",
+          "isNullable": false,
+          "isRequired": true
+        }
+      ]
+    },
+    "VividCMS.Controllers.V2.AddDeviceRequest": {
+      "name": "AddDeviceRequest",
+      "namespace": "VividCMS.Controllers.V2",
+      "properties": [
+        {
+          "name": "DeviceId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Ip",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Port",
+          "type": "System.Int32",
+          "isNullable": false,
+          "isRequired": true
+        },
+        {
+          "name": "Manufacturer",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "VividCMS.Controllers.V2.EditDeviceRequest": {
+      "name": "EditDeviceRequest",
+      "namespace": "VividCMS.Controllers.V2",
+      "properties": [
+        {
+          "name": "DeviceId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "ChannelId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        },
+        {
+          "name": "Name",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    },
+    "VividCMS.Controllers.V2.RestoreChannelRequest": {
+      "name": "RestoreChannelRequest",
+      "namespace": "VividCMS.Controllers.V2",
+      "properties": [
+        {
+          "name": "DeviceId",
+          "type": "System.String",
+          "isNullable": false,
+          "isRequired": false
+        }
+      ]
+    }
+  }
+}
