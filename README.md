@@ -2,7 +2,7 @@
 
 > Generate TypeScript code for frontend by parsing ASP.NET Core API routes and descriptions.
 
-**[中文说明请见 README-cn.md](./README-zh_CN.md)**
+**[中文说明请见 README-zh_CN.md](./README-zh_CN.md)**
 
 ---
 
