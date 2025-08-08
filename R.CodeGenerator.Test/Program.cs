@@ -32,7 +32,7 @@ public class Program
                 OutputDir = "./api",
                 TypesDir = "./types",
                 ImportLine = new[] { "import { request } from '../request';" },
-                NamespacePrefix    = "VividCMS."
+                NamespacePrefix    = "VividCMS"
             };
         }
 
@@ -69,7 +69,7 @@ public class Program
         generator.GenerateTypes(model.Types, config.TypesDir, config.UseInterface,config.NamespacePrefix);
         Console.WriteLine("类型定义生成完成。");
         Console.WriteLine("开始生成 API 代码...");
-        generator.GenerateApis(model.Apis, config.OutputDir, config.ImportLine, config.TypesDir);
+        generator.GenerateApis(model.Apis, config.OutputDir, config.ImportLine, config.TypesDir,model.Types);
         Console.WriteLine("API 代码生成完成。");
         Console.WriteLine("全部流程执行完毕。");
     }

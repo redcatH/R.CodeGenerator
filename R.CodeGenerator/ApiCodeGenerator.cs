@@ -48,18 +48,40 @@ public class ApiCodeGenerator
         foreach (var kv in types)
         {
             var type = kv.Value;
-            // 只生成指定命名空间下的类型
             if (type.Namespace == null || !type.Namespace.StartsWith(namespacePrefix))
                 continue;
             var lines = new List<string>();
-            lines.Add($"{(useInterface ? "export interface" : "export type")} {type.Name} {{");
+            // 泛型参数声明
+            string genericParams = type.GenericArguments != null && type.GenericArguments.Count > 0
+                ? $"<{string.Join(", ", type.GenericArguments.Select((g, i) => $"T{i}"))}>"
+                : "";
+            // extends基类
+            string baseClause = "";
+            if (!string.IsNullOrEmpty(type.BaseType) && types.ContainsKey(type.BaseType))
+            {
+                var baseType = types[type.BaseType];
+                var baseGenericParams = baseType.GenericArguments != null && baseType.GenericArguments.Count > 0
+                    ? $"<{string.Join(", ", baseType.GenericArguments.Select((g, i) => $"T{i}"))}>"
+                    : "";
+                baseClause = $" extends {baseType.Name}{baseGenericParams}";
+            }
+            lines.Add($"{(useInterface ? "export interface" : "export type")} {type.Name}{genericParams}{baseClause} {{");
             foreach (var prop in type.Properties)
             {
-                var tsType = MapCSharpTypeToTs(prop.Type);
+                // 泛型参数属性直接用T0/T1，否则用MapCSharpTypeToTs
+                string tsType = null;
+                int idx = -1;
+                if (type.GenericArguments != null && (idx = type.GenericArguments.IndexOf(prop.Type)) >= 0)
+                {
+                    tsType = $"T{idx}";
+                }
+                else
+                {
+                    tsType = MapCSharpTypeToTs(prop.Type);
+                }
                 var optional = prop.IsNullable || !prop.IsRequired ? "?" : "";
                 lines.Add($"  {prop.Name}{optional}: {tsType};");
             }
-
             lines.Add("}");
             var filePath = Path.Combine(typesDir, $"{type.Name}.ts");
             File.WriteAllText(filePath, string.Join("\n", lines));
@@ -78,7 +100,7 @@ public class ApiCodeGenerator
         }
     }
 
-    public void GenerateApis(List<ApiDescriptionDto> apis, string outputDir, string[] importLines, string typesDir)
+    public void GenerateApis(List<ApiDescriptionDto> apis, string outputDir, string[] importLines, string typesDir, Dictionary<string, TypeDescriptionDto> types)
     {
         Directory.CreateDirectory(outputDir);
         var groups = apis.GroupBy(a => a.Controller);
@@ -118,9 +140,28 @@ export function fetch{{ api.action }}({{ api.param_list }}) {
                     dataLine = $"params: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}";
                 else
                     dataLine = $"data: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}";
-                var returnType = api.ReturnType != null ? MapCSharpTypeToTs(api.ReturnType.Type) : "any";
-                if (returnType != "string" && returnType != "number" && returnType != "boolean" && returnType != "any")
-                    returnType = $"types.{returnType}";
+                // 处理返回类型泛型
+                string returnType = "any";
+                if (api.ReturnType != null && !string.IsNullOrEmpty(api.ReturnType.Type))
+                {
+                    // 查找类型描述
+                    if (types.TryGetValue(api.ReturnType.Type, out var retTypeDesc))
+                    {
+                        returnType = retTypeDesc.Name;
+                        if (retTypeDesc.GenericArguments != null && retTypeDesc.GenericArguments.Count > 0)
+                        {
+                            var genArgs = retTypeDesc.GenericArguments.Select(MapCSharpTypeToTs);
+                            returnType += $"<{string.Join(", ", genArgs)}>";
+                        }
+                        returnType = $"types.{returnType}";
+                    }
+                    else
+                    {
+                        returnType = MapCSharpTypeToTs(api.ReturnType.Type);
+                        if (returnType != "string" && returnType != "number" && returnType != "boolean" && returnType != "any")
+                            returnType = $"types.{returnType}";
+                    }
+                }
                 apisForTpl.Add(new
                 {
                     action = api.Action,
