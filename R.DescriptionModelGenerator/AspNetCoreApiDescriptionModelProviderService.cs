@@ -84,15 +84,65 @@ public class AspNetCoreApiDescriptionModelProviderService
     public static ReturnTypeModel? CreateReturnTypeModel(Type? type)
     {
         if (type == null) return null;
-        var unwrappedType = UnwrapTask(type);
+        var unwrappedType = UnwrapActionResult(UnwrapTask(type));
         if (unwrappedType == null) return null;
         return new ReturnTypeModel
         {
             Type = unwrappedType != null ? CalculateTypeName(unwrappedType) : string.Empty,
             TypeSimple = unwrappedType != null ? GetSimpleTypeName(unwrappedType) : string.Empty
         };
-    }
 
+
+    }
+    /// <summary>
+    /// 解包 ActionResult<T>、IActionResult、ActionResult、Task<ActionResult<T>>、Task<T> 等，仿照 ABP
+    /// </summary>
+    public static Type? UnwrapActionResult(Type? type)
+    {
+        if (type == null) return null;
+
+        // 递归解包 Task<T>
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(System.Threading.Tasks.Task<>))
+        {
+            var inner = type.GetGenericArguments()[0];
+            return UnwrapActionResult(inner);
+        }
+
+        // 解包 ActionResult<T>
+        var actionResultType = typeof(Microsoft.AspNetCore.Mvc.ActionResult<>);
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == actionResultType)
+        {
+            var inner = type.GetGenericArguments()[0];
+            return UnwrapActionResult(inner);
+        }
+
+        // ABP风格：如果不是 IActionResult 派生类，直接返回
+        var iactionResultType = typeof(Microsoft.AspNetCore.Mvc.IActionResult);
+        if (!iactionResultType.IsAssignableFrom(type))
+        {
+            return type;
+        }
+
+        // 针对 JsonResult/ObjectResult/NoContentResult 这些特殊类型
+        var jsonResultType = typeof(Microsoft.AspNetCore.Mvc.JsonResult);
+        var objectResultType = typeof(Microsoft.AspNetCore.Mvc.ObjectResult);
+        var noContentResultType = typeof(Microsoft.AspNetCore.Mvc.NoContentResult);
+        if (jsonResultType.IsAssignableFrom(type) || objectResultType.IsAssignableFrom(type) || noContentResultType.IsAssignableFrom(type))
+        {
+            return null; // 通常前端不需要类型
+        }
+
+        // 非泛型 ActionResult、IActionResult、void、Task
+        if (type == typeof(Microsoft.AspNetCore.Mvc.IActionResult) ||
+            type == typeof(Microsoft.AspNetCore.Mvc.ActionResult) ||
+            type == typeof(void) ||
+            type == typeof(System.Threading.Tasks.Task))
+        {
+            return null;
+        }
+
+        return null;
+    }
     public static Type? UnwrapTask(Type? type)
     {
         if (type == null) return null;
@@ -296,11 +346,47 @@ public class AspNetCoreApiDescriptionModelProviderService
                     IsRequired = isRequired
                 };
             }).ToList();
+
+        // 泛型参数类型全名
+        List<string> genericArgs = new();
+        if (type.IsGenericType)
+        {
+            foreach (var arg in type.GetGenericArguments())
+            {
+                genericArgs.Add(FriendlyTypeName(CalculateTypeName(arg)));
+            }
+        }
+
+        // ABP风格的泛型类型名处理
+        string pureName;
+        if (type.IsGenericTypeDefinition)
+        {
+            // 泛型定义，如 ApiResult<T0>
+            var i = 0;
+            var argumentList = string.Join(",", type.GetGenericArguments().Select(_ => $"T{i++}"));
+            var fullName = type.FullName ?? type.Name;
+            var tickIdx = fullName.IndexOf('`');
+            if (tickIdx > 0)
+                fullName = fullName.Substring(0, tickIdx);
+            pureName = $"{fullName}<{argumentList}>";
+        }
+        else
+        {
+            // 非泛型定义，去除 `1 之类的后缀
+            pureName = type.Name;
+            var tickIndex = pureName.IndexOf('`');
+            if (tickIndex > 0)
+            {
+                pureName = pureName.Substring(0, tickIndex);
+            }
+        }
+
         types[typeName] = new TypeDescriptionDto
         {
-            Name = type.Name,
+            Name = pureName,
             Namespace = type.Namespace,
             BaseType = (type.BaseType != null && type.BaseType != typeof(object)) ? FriendlyTypeName(CalculateTypeName(type.BaseType)) : null,
+            GenericArguments = genericArgs,
             Properties = props
         };
         foreach (var p in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
