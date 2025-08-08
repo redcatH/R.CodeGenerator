@@ -300,6 +300,7 @@ public class AspNetCoreApiDescriptionModelProviderService
         {
             Name = type.Name,
             Namespace = type.Namespace,
+            BaseType = (type.BaseType != null && type.BaseType != typeof(object)) ? FriendlyTypeName(CalculateTypeName(type.BaseType)) : null,
             Properties = props
         };
         foreach (var p in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
