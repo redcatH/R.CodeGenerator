@@ -11,4 +11,10 @@
       <ProjectReference Include="..\R.CodeGenerator\R.CodeGenerator.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="swagger.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

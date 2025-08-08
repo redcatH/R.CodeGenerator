@@ -31,7 +31,7 @@ public class Program
             {
                 OutputDir = "./api",
                 TypesDir = "./types",
-                ImportLine = new[] { "import { request } from '../request';" },
+                ImportLine = new[] { "import { request as requestHttp } from '../request';" },
                 NamespacePrefix    = "VividCMS"
             };
         }

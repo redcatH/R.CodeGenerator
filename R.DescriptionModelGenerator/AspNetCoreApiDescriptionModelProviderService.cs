@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
@@ -42,8 +43,8 @@ public class AspNetCoreApiDescriptionModelProviderService
                     return new ApiParameterDescriptionDto
                     {
                         Name = p.Name,
-                        Type = p.Type?.FullName?.Replace('+', '.'),
-                        Source = p.Source?.Id,
+                        Type = p.Type.FullName?.Replace('+', '.'),
+                        Source = p.Source.Id,
                         IsOptional = isOptional,
                         DefaultValue = p.RouteInfo?.DefaultValue
                     };
@@ -80,69 +81,69 @@ public class AspNetCoreApiDescriptionModelProviderService
         };
     }
 
-    // abp风格的ReturnType处理
-    public static ReturnTypeModel? CreateReturnTypeModel(Type? type)
+    private static ReturnTypeModel? CreateReturnTypeModel(Type? type)
     {
         if (type == null) return null;
         var unwrappedType = UnwrapActionResult(UnwrapTask(type));
         if (unwrappedType == null) return null;
         return new ReturnTypeModel
         {
-            Type = unwrappedType != null ? CalculateTypeName(unwrappedType) : string.Empty,
-            TypeSimple = unwrappedType != null ? GetSimpleTypeName(unwrappedType) : string.Empty
+            Type = CalculateTypeName(unwrappedType),
+            TypeSimple = GetSimpleTypeName(unwrappedType)
         };
-
-
     }
+
     /// <summary>
-    /// 解包 ActionResult<T>、IActionResult、ActionResult、Task<ActionResult<T>>、Task<T> 等，仿照 ABP
+    /// 解包 ActionResult<T>、IActionResult、ActionResult、Task<ActionResult<T>>、Task<T> 等，
     /// </summary>
     public static Type? UnwrapActionResult(Type? type)
     {
         if (type == null) return null;
 
         // 递归解包 Task<T>
-        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(System.Threading.Tasks.Task<>))
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>))
         {
             var inner = type.GetGenericArguments()[0];
             return UnwrapActionResult(inner);
         }
 
         // 解包 ActionResult<T>
-        var actionResultType = typeof(Microsoft.AspNetCore.Mvc.ActionResult<>);
+        var actionResultType = typeof(ActionResult<>);
         if (type.IsGenericType && type.GetGenericTypeDefinition() == actionResultType)
         {
             var inner = type.GetGenericArguments()[0];
             return UnwrapActionResult(inner);
         }
 
-        // ABP风格：如果不是 IActionResult 派生类，直接返回
-        var iactionResultType = typeof(Microsoft.AspNetCore.Mvc.IActionResult);
+        // 如果不是 IActionResult 派生类，直接返回
+        var iactionResultType = typeof(IActionResult);
         if (!iactionResultType.IsAssignableFrom(type))
         {
             return type;
         }
 
         // 针对 JsonResult/ObjectResult/NoContentResult 这些特殊类型
-        var jsonResultType = typeof(Microsoft.AspNetCore.Mvc.JsonResult);
-        var objectResultType = typeof(Microsoft.AspNetCore.Mvc.ObjectResult);
-        var noContentResultType = typeof(Microsoft.AspNetCore.Mvc.NoContentResult);
-        if (jsonResultType.IsAssignableFrom(type) || objectResultType.IsAssignableFrom(type) || noContentResultType.IsAssignableFrom(type))
+        var jsonResultType = typeof(JsonResult);
+        var objectResultType = typeof(ObjectResult);
+        var noContentResultType = typeof(NoContentResult);
+        if (jsonResultType.IsAssignableFrom(type) || objectResultType.IsAssignableFrom(type) ||
+            noContentResultType.IsAssignableFrom(type))
         {
             return null; // 通常前端不需要类型
         }
 
         // 非泛型 ActionResult、IActionResult、void、Task
-        if (type == typeof(Microsoft.AspNetCore.Mvc.IActionResult) ||
-            type == typeof(Microsoft.AspNetCore.Mvc.ActionResult) ||
+        if (type == typeof(IActionResult) ||
+            type == typeof(ActionResult) ||
             type == typeof(void) ||
-            type == typeof(System.Threading.Tasks.Task))
+            type == typeof(Task))
         {
             return null;
         }
 
         return null;
     }
+
     public static Type? UnwrapTask(Type? type)
     {
         if (type == null) return null;
@@ -174,31 +175,31 @@ public class AspNetCoreApiDescriptionModelProviderService
     }
 
     // 具体类型定义
-    public class ApiDescriptionModelResult
-    {
-        public List<ApiDescriptionDto> Apis { get; set; } = new();
-        public Dictionary<string, TypeDescriptionDto> Types { get; set; } = new();
-    }
-
-    public class ApiDescriptionDto
-    {
-        public string? Controller { get; set; }
-        public string? Action { get; set; }
-        public string? HttpMethod { get; set; }
-        public string? Path { get; set; }
-        public List<ApiParameterDescriptionDto> Parameters { get; set; } = new();
-        public ReturnTypeModel? ReturnType { get; set; }
-    }
+    // public class ApiDescriptionModelResult
+    // {
+    //     public List<ApiDescriptionDto> Apis { get; set; } = new();
+    //     public Dictionary<string, TypeDescriptionDto> Types { get; set; } = new();
+    // }
+    //
+    // public class ApiDescriptionDto
+    // {
+    //     public string? Controller { get; set; }
+    //     public string? Action { get; set; }
+    //     public string? HttpMethod { get; set; }
+    //     public string? Path { get; set; }
+    //     public List<ApiParameterDescriptionDto> Parameters { get; set; } = new();
+    //     public ReturnTypeModel? ReturnType { get; set; }
+    // }
 
     private static bool GetIsOptional(ApiParameterDescription p)
     {
-        bool isOptional = false;
+        var isOptional = false;
         var paramType = p.Type;
         if (p.RouteInfo?.IsOptional == true)
         {
             isOptional = true;
         }
-        else if (paramType != null)
+        else
         {
             if (Nullable.GetUnderlyingType(paramType) != null)
             {
@@ -249,7 +250,6 @@ public class AspNetCoreApiDescriptionModelProviderService
 
     private void AddTypeRecursive(Dictionary<string, TypeDescriptionDto> types, Type type)
     {
-        if (type == null) return;
         if (type == typeof(string) || type.IsPrimitive || type == typeof(object) || type == typeof(void)) return;
         if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
         {
@@ -271,8 +271,7 @@ public class AspNetCoreApiDescriptionModelProviderService
             {
                 foreach (var arg in type.GetGenericArguments())
                 {
-                    if (arg != null)
-                        AddTypeRecursive(types, arg);
+                    AddTypeRecursive(types, arg);
                 }
             }
 
@@ -286,8 +285,7 @@ public class AspNetCoreApiDescriptionModelProviderService
             .Select(p =>
             {
                 var propertyType = p.PropertyType;
-                bool isNullable = false;
-                bool isRequired = false;
+                var isNullable = false;
                 if (Nullable.GetUnderlyingType(propertyType) != null)
                 {
                     isNullable = true;
@@ -336,8 +334,8 @@ public class AspNetCoreApiDescriptionModelProviderService
                     }
                 }
 
-                isRequired = p.GetCustomAttributes().Any(a => a.GetType().Name == "RequiredAttribute") ||
-                             (propertyType.IsValueType && Nullable.GetUnderlyingType(propertyType) == null);
+                var isRequired = p.GetCustomAttributes().Any(a => a.GetType().Name == "RequiredAttribute") ||
+                                 (propertyType.IsValueType && Nullable.GetUnderlyingType(propertyType) == null);
                 return new TypePropertyDescriptionDto
                 {
                     Name = p.Name,
@@ -357,7 +355,7 @@ public class AspNetCoreApiDescriptionModelProviderService
             }
         }
 
-        // ABP风格的泛型类型名处理
+        // 泛型类型名处理
         string pureName;
         if (type.IsGenericTypeDefinition)
         {
@@ -385,7 +383,9 @@ public class AspNetCoreApiDescriptionModelProviderService
         {
             Name = pureName,
             Namespace = type.Namespace,
-            BaseType = (type.BaseType != null && type.BaseType != typeof(object)) ? FriendlyTypeName(CalculateTypeName(type.BaseType)) : null,
+            BaseType = (type.BaseType != null && type.BaseType != typeof(object))
+                ? FriendlyTypeName(CalculateTypeName(type.BaseType))
+                : null,
             GenericArguments = genericArgs,
             Properties = props
         };
@@ -400,17 +400,8 @@ public class AspNetCoreApiDescriptionModelProviderService
         }
     }
 
-    // ReturnTypeModel 类，仿 abp 的 ReturnValueApiDescriptionModel
-    public class ReturnTypeModel
-    {
-        public string? Type { get; set; }
-        public string? TypeSimple { get; set; }
-    }
-
-
     private static string CalculateTypeName(Type type)
     {
-        if (type == null) return string.Empty;
         if (!type.IsGenericType)
         {
             return type.FullName ?? type.Name;
@@ -425,7 +416,7 @@ public class AspNetCoreApiDescriptionModelProviderService
             baseName = baseName.Substring(0, tickIndex);
         }
 
-        var argNames = string.Join(",", genericArgs.Select(t => t != null ? CalculateTypeName(t) : string.Empty));
+        var argNames = string.Join(",", genericArgs.Select(CalculateTypeName));
         return $"{baseName}<{argNames}>";
     }
 }

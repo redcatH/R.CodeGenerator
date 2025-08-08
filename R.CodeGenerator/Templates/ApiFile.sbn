@@ -5,8 +5,8 @@ import * as types from '../types';
 
 {{~ for api in apis ~}}
 /** {{ api.action }} */
-export function fetch{{ api.action }}({{ api.param_list }}) {
-  return request<{{ api.return_type }}>({
+export function {{ api.action }}({{ api.param_list }}) {
+  return requestHttp<{{ api.return_type }}>({
     url: '{{ api.path }}',
     method: '{{ api.http_method | string.downcase }}',
     {{ api.data_line }}
