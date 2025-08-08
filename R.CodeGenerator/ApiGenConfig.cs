@@ -8,4 +8,5 @@ public class ApiGenConfig
     public string ApiPrefix { get; set; } = "";
     public bool UseInterface { get; set; } = true;
     public string NamespacePrefix { get; set; }
+    public string[] UnwrapGenericTypes { get; set; }
 }

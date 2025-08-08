@@ -29,10 +29,11 @@ public class Program
             // 默认配置
             config = new ApiGenConfig
             {
-                OutputDir = "./api",
-                TypesDir = "./types",
-                ImportLine = new[] { "import { request as requestHttp } from '../request';" },
-                NamespacePrefix    = "VividCMS"
+                OutputDir = "soybean-admin\\src\\service\\business_api",
+                TypesDir = "soybean-admin\\src\\service\\types",
+                ImportLine = ["import { request as requestHttp } from '../request';"],
+                NamespacePrefix    = "VividCMS",
+                UnwrapGenericTypes = ["ApiResult"]
             };
         }
 
@@ -69,7 +70,7 @@ public class Program
         generator.GenerateTypes(model.Types, config.TypesDir, config.UseInterface,config.NamespacePrefix);
         Console.WriteLine("类型定义生成完成。");
         Console.WriteLine("开始生成 API 代码...");
-        generator.GenerateApis(model.Apis, config.OutputDir, config.ImportLine, config.TypesDir,model.Types);
+        generator.GenerateApis(model.Apis, config.OutputDir, config.ImportLine,model.Types,config.UnwrapGenericTypes);
         Console.WriteLine("API 代码生成完成。");
         Console.WriteLine("全部流程执行完毕。");
     }

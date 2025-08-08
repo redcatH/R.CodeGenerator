@@ -1,0 +1,18 @@
+{{~ for $import in import_lines ~}}
+{{ $import }}
+{{~ end ~}}
+
+const {{ service_name }} = {
+{{~ for api in apis ~}}
+
+  {{ api.action_name }}({{ api.param_list }}) {
+    return requestHttp<{{ api.return_type }}>({
+      url: '{{ api.path }}',
+      method: '{{ api.http_method | string.downcase }}',
+      {{ api.data_line }}
+    });
+  },
+{{~ end ~}}
+};
+
+export default {{ service_name }};

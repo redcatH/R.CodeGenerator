@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Templates\ApiFile.sbn">
+      <None Update="Templates\api_service.sbn">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

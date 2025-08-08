@@ -48,60 +48,85 @@ public class ApiCodeGenerator
     {
         return tsType == "string" || tsType == "number" || tsType == "boolean" || tsType == "any";
     }
-    
+
     public void GenerateTypes(Dictionary<string, TypeDescriptionDto> types, string typesDir, bool useInterface,
         string namespacePrefix)
     {
         Directory.CreateDirectory(typesDir);
         var typeNames = new List<string>();
-        foreach (var kv in types)
+        var generatedTypes = new HashSet<string>();
+        var pendingTypes = new Dictionary<string, TypeDescriptionDto>(types);
+        // 拓扑排序，优先生成无依赖类型
+        bool progress;
+        do
         {
-            var type = kv.Value;
-            if (type.Namespace == null || !type.Namespace.StartsWith(namespacePrefix))
-                continue;
-            var lines = new List<string>();
-            // 泛型参数声明
-            string genericParams = type.GenericArguments != null && type.GenericArguments.Count > 0
-                ? $"<{string.Join(", ", type.GenericArguments.Select((g, i) => $"T{i}"))}>"
-                : "";
-            // extends基类
-            string baseClause = "";
-            if (!string.IsNullOrEmpty(type.BaseType) && types.ContainsKey(type.BaseType))
+            progress = false;
+            var toRemove = new List<string>();
+            foreach (var kv in pendingTypes)
             {
-                var baseType = types[type.BaseType];
-                var baseGenericParams = baseType.GenericArguments != null && baseType.GenericArguments.Count > 0
-                    ? $"<{string.Join(", ", baseType.GenericArguments.Select((g, i) => $"T{i}"))}>"
+                var type = kv.Value;
+                if (type.Namespace == null || !type.Namespace.StartsWith(namespacePrefix))
+                    continue;
+                // 如果有基类且基类未生成，跳过
+                if (!string.IsNullOrEmpty(type.BaseType) && types.ContainsKey(type.BaseType) && !generatedTypes.Contains(types[type.BaseType].Name))
+                    continue;
+
+                var lines = new List<string>();
+                // 需要 import 的类型
+                var importSet = new HashSet<string>();
+                string genericParams = type.GenericArguments != null && type.GenericArguments.Count > 0
+                    ? $"<{string.Join(", ", type.GenericArguments.Select((g, i) => $"T{i}"))}>"
                     : "";
-                baseClause = $" extends {baseType.Name}{baseGenericParams}";
-            }
-
-            lines.Add(
-                $"{(useInterface ? "export interface" : "export type")} {type.Name}{genericParams}{baseClause} {{");
-            foreach (var prop in type.Properties)
-            {
-                // 泛型参数属性直接用T0/T1，否则用MapCSharpTypeToTs
-                string tsType = null;
-                int idx = -1;
-                if (type.GenericArguments != null && (idx = type.GenericArguments.IndexOf(prop.Type)) >= 0)
+                string baseClause = "";
+                if (!string.IsNullOrEmpty(type.BaseType) && types.ContainsKey(type.BaseType))
                 {
-                    tsType = $"T{idx}";
+                    var baseType = types[type.BaseType];
+                    var baseGenericParams = baseType.GenericArguments != null && baseType.GenericArguments.Count > 0
+                        ? $"<{string.Join(", ", baseType.GenericArguments.Select((g, i) => $"T{i}"))}>"
+                        : "";
+                    baseClause = $" extends {baseType.Name}{baseGenericParams}";
+                    // 只要不是全局类型就 import
+                    if (baseType.Name != "object" && baseType.Name != "any" && baseType.Name != type.Name)
+                        importSet.Add(baseType.Name);
                 }
-                else
+                lines.Add($"{(useInterface ? "export interface" : "export type")} {type.Name}{genericParams}{baseClause} {{");
+                foreach (var prop in type.Properties)
                 {
-                    tsType = MapCSharpTypeToTs(prop.Type);
+                    string tsType = null;
+                    int idx = -1;
+                    if (type.GenericArguments != null && (idx = type.GenericArguments.IndexOf(prop.Type)) >= 0)
+                    {
+                        tsType = $"T{idx}";
+                    }
+                    else
+                    {
+                        tsType = MapCSharpTypeToTs(prop.Type);
+                        // 需要 import 的属性类型（非基础类型、非泛型参数、非自身）
+                        if (!IsTsBasicType(tsType) && types.Values.Any(t => t.Name == tsType) && tsType != type.Name)
+                            importSet.Add(tsType);
+                    }
+                    var optional = prop.IsNullable || !prop.IsRequired ? "?" : "";
+                    lines.Add($"  {prop.Name}{optional}: {tsType};");
                 }
-
-                var optional = prop.IsNullable || !prop.IsRequired ? "?" : "";
-                lines.Add($"  {prop.Name}{optional}: {tsType};");
+                lines.Add("}");
+                // 先写 import 语句
+                if (importSet.Count > 0)
+                {
+                    var importLines = importSet.Select(n => $"import {{ {n} }} from './{n}';");
+                    lines.InsertRange(0, importLines);
+                }
+                var filePath = Path.Combine(typesDir, $"{type.Name}.ts");
+                File.WriteAllText(filePath, string.Join("\n", lines));
+                Console.WriteLine($"[Type] Generated: {filePath}");
+                if (!string.IsNullOrEmpty(type.Name))
+                    typeNames.Add(type.Name);
+                generatedTypes.Add(type.Name);
+                toRemove.Add(kv.Key);
+                progress = true;
             }
-
-            lines.Add("}");
-            var filePath = Path.Combine(typesDir, $"{type.Name}.ts");
-            File.WriteAllText(filePath, string.Join("\n", lines));
-            Console.WriteLine($"[Type] Generated: {filePath}");
-            if (!string.IsNullOrEmpty(type.Name))
-                typeNames.Add(type.Name);
-        }
+            foreach (var key in toRemove)
+                pendingTypes.Remove(key);
+        } while (pendingTypes.Count > 0 && progress);
 
         // 生成 index.ts，统一导出所有类型
         if (typeNames.Count > 0)
@@ -113,89 +138,74 @@ public class ApiCodeGenerator
         }
     }
 
-    public void GenerateApis(List<ApiDescriptionDto> apis, string outputDir, string[] importLines, string typesDir,
-        Dictionary<string, TypeDescriptionDto> types)
+    public void GenerateApis(List<ApiDescriptionDto> apis, string outputDir, string[] importLines,
+        Dictionary<string, TypeDescriptionDto> types, string[] configUnwrapGenericTypes)
     {
         Directory.CreateDirectory(outputDir);
         var groups = apis.GroupBy(a => a.Controller);
-        var templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", "ApiFile.sbn");
-        string templateText = File.Exists(templatePath)
-            ? File.ReadAllText(templatePath)
-            : @"{{~ for line in import_lines ~}}
-{{ line }}
-{{~ end ~}}
-import * as types from '../types';
+        var templateText = File.ReadAllText("templates/api_service.sbn");
+        var template = Template.Parse(templateText);
 
-{{~ for api in apis ~}}
-/** {{ api.action }} */
-export function {{ api.action }}({{ api.param_list }}){
-  return request<{{ api.return_type }}>({
-    url: '{{ api.path }}',
-    method: '{{ api.http_method | string.downcase }}',
-    {{ api.data_line }}
-}
-
-{{~ end ~}}";
         foreach (var group in groups)
         {
-            var apisForTpl = new List<object>();
-            foreach (var api in group)
+            var serviceName = group.Key + "Service";
+            var apiList = group.Select(api => new
             {
-                var paramList = string.Join(", ", api.Parameters.Select(p =>
+                action_name = GenerateFriendlyActionName(group.Key, api.Action, api.HttpMethod),
+                param_list = string.Join(", ", api.Parameters.Select(p =>
                 {
                     var tsType = MapCSharpTypeToTs(p.Type);
                     if (!IsTsBasicType(tsType))
                         tsType = $"types.{tsType}";
                     return $"{p.Name}{(p.IsOptional ? "?" : "")}: {tsType}";
-                }));
-                string dataLine = "";
-                if (api.HttpMethod?.ToUpper() == "GET")
-                    dataLine = $"params: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}";
-                else
-                    dataLine = $"data: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}";
-                // 处理返回类型泛型
-                string returnType = "any";
-                if (api.ReturnType != null && !string.IsNullOrEmpty(api.ReturnType.Type))
-                {
-                    returnType = GetReturnType(types, api);
-                }
+                })),
+                return_type = api.ReturnType != null && !string.IsNullOrEmpty(api.ReturnType.Type)
+                    ? GetReturnType(types, api,configUnwrapGenericTypes.ToHashSet())
+                    : "any",
+                path = api.Path,
+                http_method = api.HttpMethod ?? "get",
+                data_line = api.HttpMethod?.ToUpper() == "GET"
+                    ? $"params: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}"
+                    : $"data: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}"
+            }).ToList();
 
-                // 使用独立函数生成友好函数名
-                string actionName = GenerateFriendlyActionName(group.Key, api.Action, api.HttpMethod);
-
-                apisForTpl.Add(new
-                {
-                    action = actionName,
-                    param_list = paramList,
-                    return_type = returnType,
-                    path = api.Path,
-                    http_method = api.HttpMethod ?? "get",
-                    data_line = api.Parameters.Count > 0 ? dataLine : ""
-                });
-            }
-
-            var scribanTemplate = Template.Parse(templateText);
-            var result = scribanTemplate.Render(new
+            var renderObj = new
             {
-                import_lines = importLines,
-                apis = apisForTpl
-            });
-            var filePath = Path.Combine(outputDir, $"{group.Key}.ts");
+                import_lines = new List<string> { "import * as types from '../types';" }
+                    .Concat(importLines ?? Array.Empty<string>()).ToList(),
+                service_name = serviceName,
+                apis = apiList
+            };
+
+            var result = template.Render(renderObj, member => member.Name);
+
+            var filePath = Path.Combine(outputDir, $"{serviceName}.ts");
             File.WriteAllText(filePath, result);
             Console.WriteLine($"[API] Generated: {filePath}");
         }
     }
-
-    private static string GetReturnType(Dictionary<string, TypeDescriptionDto> types, ApiDescriptionDto api)
+    private static string GetReturnType(Dictionary<string, TypeDescriptionDto> types, ApiDescriptionDto api,HashSet<string> unwrapGenericTypes)
     {
         string returnType;
         if (types.TryGetValue(api.ReturnType.Type, out var retTypeDesc))
         {
+            // 判断是否需要解包
+            if (unwrapGenericTypes.Contains(retTypeDesc.Name)
+                && retTypeDesc.GenericArguments != null
+                && retTypeDesc.GenericArguments.Count == 1)
+            {
+                var tsType = MapCSharpTypeToTs(retTypeDesc.GenericArguments[0]);
+                if (!IsTsBasicType(tsType) && !tsType.StartsWith("types."))
+                    tsType = $"types.{tsType}";
+                return tsType;
+            }
+            
             returnType = retTypeDesc.Name;
             if (retTypeDesc.GenericArguments != null && retTypeDesc.GenericArguments.Count > 0)
             {
                 // 泛型参数类型加 types. 前缀（如有必要）
-                var genArgs = retTypeDesc.GenericArguments.Select(arg => {
+                var genArgs = retTypeDesc.GenericArguments.Select(arg =>
+                {
                     var tsType = MapCSharpTypeToTs(arg);
                     if (!IsTsBasicType(tsType) && !tsType.StartsWith("types."))
                         tsType = $"types.{tsType}";
@@ -203,7 +213,7 @@ export function {{ api.action }}({{ api.param_list }}){
                 });
                 returnType += $"<{string.Join(", ", genArgs)}>";
             }
-            // 只在外层加 types. 前缀
+            
             returnType = $"types.{returnType}";
         }
         else
