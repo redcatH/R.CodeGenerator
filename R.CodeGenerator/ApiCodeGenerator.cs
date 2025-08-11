@@ -5,6 +5,12 @@ namespace R.CodeGenerator;
 
 public class ApiCodeGenerator
 {
+    private readonly ApiGeneratorConfig _config;
+    
+    public ApiCodeGenerator(ApiGeneratorConfig? config = null)
+    {
+        _config = config ?? new ApiGeneratorConfig();
+    }
     public static string MapCSharpTypeToTs(string? csharpType)
     {
         if (string.IsNullOrEmpty(csharpType)) return "any";
@@ -47,6 +53,54 @@ public class ApiCodeGenerator
     private static bool IsTsBasicType(string tsType)
     {
         return tsType == "string" || tsType == "number" || tsType == "boolean" || tsType == "any";
+    }
+
+    /// <summary>
+    /// 清理和转义注释内容，确保不会破坏 JSDoc 语法
+    /// </summary>
+    private string SanitizeComment(string? comment)
+    {
+        return CommentSanitizer.SanitizeSingleLine(comment, _config.CommentConfig);
+    }
+
+    /// <summary>
+    /// 生成多行JSDoc注释
+    /// </summary>
+    private List<string> GenerateJSDocComment(string? summary, string? remarks)
+    {
+        var lines = new List<string>();
+        
+        if (!_config.GenerateDetailedComments || 
+            (string.IsNullOrWhiteSpace(summary) && string.IsNullOrWhiteSpace(remarks)))
+            return lines;
+
+        lines.Add("/**");
+        
+        // 处理 summary
+        if (!string.IsNullOrWhiteSpace(summary))
+        {
+            var summaryLines = CommentSanitizer.SanitizeMultiLine(summary, _config.CommentConfig);
+            foreach (var line in summaryLines)
+            {
+                lines.Add($" * {line}");
+            }
+        }
+        
+        // 处理 remarks
+        if (!string.IsNullOrWhiteSpace(remarks))
+        {
+            if (!string.IsNullOrWhiteSpace(summary))
+                lines.Add(" *");
+            
+            var remarksLines = CommentSanitizer.SanitizeMultiLine(remarks, _config.CommentConfig);
+            foreach (var line in remarksLines)
+            {
+                lines.Add($" * {line}");
+            }
+        }
+        
+        lines.Add(" */");
+        return lines;
     }
 
     public void GenerateTypes(Dictionary<string, TypeDescriptionDto> types, string typesDir, bool useInterface,
@@ -94,19 +148,8 @@ public class ApiCodeGenerator
                         importSet.Add(baseType.Name);
                 }
                 // 添加类型的 JSDoc 注释
-                if (!string.IsNullOrEmpty(type.Summary) || !string.IsNullOrEmpty(type.Remarks))
-                {
-                    lines.Add("/**");
-                    if (!string.IsNullOrEmpty(type.Summary))
-                        lines.Add($" * {type.Summary}");
-                    if (!string.IsNullOrEmpty(type.Remarks))
-                    {
-                        if (!string.IsNullOrEmpty(type.Summary))
-                            lines.Add(" *");
-                        lines.Add($" * {type.Remarks}");
-                    }
-                    lines.Add(" */");
-                }
+                var typeCommentLines = GenerateJSDocComment(type.Summary, type.Remarks);
+                lines.AddRange(typeCommentLines);
 
                 lines.Add($"{(useInterface ? "export interface" : "export type")} {type.Name}{genericParams}{baseClause} {{");
                 foreach (var prop in type.Properties)
@@ -127,18 +170,13 @@ public class ApiCodeGenerator
                     var optional = prop.IsNullable || !prop.IsRequired ? "?" : "";
                     
                     // 添加属性的 JSDoc 注释
-                    if (!string.IsNullOrEmpty(prop.Summary) || !string.IsNullOrEmpty(prop.Remarks))
+                    var propCommentLines = GenerateJSDocComment(prop.Summary, prop.Remarks);
+                    if (propCommentLines.Count > 0)
                     {
-                        lines.Add("  /**");
-                        if (!string.IsNullOrEmpty(prop.Summary))
-                            lines.Add($"   * {prop.Summary}");
-                        if (!string.IsNullOrEmpty(prop.Remarks))
-                        {
-                            if (!string.IsNullOrEmpty(prop.Summary))
-                                lines.Add("   *");
-                            lines.Add($"   * {prop.Remarks}");
-                        }
-                        lines.Add("   */");
+                        // 为属性注释添加缩进
+                        var indentedLines = propCommentLines.Select(line => 
+                            line == "/**" || line == " */" ? $"  {line}" : $"  {line}");
+                        lines.AddRange(indentedLines);
                     }
                     
                     lines.Add($"  {prop.Name}{optional}: {tsType};");
@@ -200,8 +238,8 @@ public class ApiCodeGenerator
                         type = tsType,
                         optional = p.IsOptional,
                         param_string = $"{p.Name}{(p.IsOptional ? "?" : "")}: {tsType}",
-                        summary = p.Summary ?? string.Empty,
-                        has_comment = !string.IsNullOrEmpty(p.Summary)
+                        summary = SanitizeComment(p.Summary), // 清理参数注释
+                        has_comment = !string.IsNullOrEmpty(SanitizeComment(p.Summary))
                     };
                 }).ToList();
 
@@ -213,14 +251,14 @@ public class ApiCodeGenerator
                     return_type = api.ReturnType != null && !string.IsNullOrEmpty(api.ReturnType.Type)
                         ? GetReturnType(types, api, configUnwrapGenericTypes.ToHashSet())
                         : "any",
-                    return_comment = api.ReturnType?.Summary ?? string.Empty, // 添加返回值注释
+                    return_comment = SanitizeComment(api.ReturnType?.Summary ?? string.Empty), // 清理返回值注释
                     path = api.Path,
                     http_method = api.HttpMethod ?? "get",
                     data_line = api.HttpMethod?.ToUpper() == "GET"
                         ? $"params: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}"
                         : $"data: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}",
                     // 添加注释信息
-                    summary = api.Summary ?? string.Empty,
+                    summary = SanitizeComment(api.Summary ?? string.Empty), // 清理方法注释
                     remarks = api.Remarks ?? string.Empty,
                     has_comment = !string.IsNullOrEmpty(api.Summary) || !string.IsNullOrEmpty(api.Remarks) || 
                                  paramInfos.Any(p => p.has_comment) || !string.IsNullOrEmpty(api.ReturnType?.Summary)

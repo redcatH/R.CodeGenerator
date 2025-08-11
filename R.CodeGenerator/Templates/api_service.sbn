@@ -7,21 +7,21 @@ const {{ service_name }} = {
 {{~ if api.has_comment ~}}
   /**
 {{~ if api.summary ~}}
-   * {{ api.summary }}
+   * {{ api.summary | string.replace "*/" "*​/" | string.replace "/*" "/​*" }}
 {{~ end ~}}
 {{~ if api.remarks ~}}
 {{~ if api.summary ~}}
    *
 {{~ end ~}}
-   * {{ api.remarks }}
+   * {{ api.remarks | string.replace "*/" "*​/" | string.replace "/*" "/​*" }}
 {{~ end ~}}
 {{~ for param in api.parameters ~}}
 {{~ if param.has_comment ~}}
-   * @param {{ param.name }} {{ param.summary }}
+   * @param {{ param.name }} {{ param.summary | string.replace "*/" "*​/" | string.replace "/*" "/​*" }}
 {{~ end ~}}
 {{~ end ~}}
 {{~ if api.return_comment ~}}
-   * @returns {{ api.return_comment }}
+   * @returns {{ api.return_comment | string.replace "*/" "*​/" | string.replace "/*" "/​*" }}
 {{~ end ~}}
    */
 {{~ end ~}}
