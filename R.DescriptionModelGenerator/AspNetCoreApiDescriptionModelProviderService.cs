@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Options;
 using System.Linq;
+using System.Xml;
+using System.Xml.XPath;
+using System.IO;
 
 namespace R.DescriptionModelGenerator;
 
@@ -15,6 +18,7 @@ public class AspNetCoreApiDescriptionModelProviderService
 {
     private readonly IApiDescriptionGroupCollectionProvider _apiDescriptionProvider;
     private readonly JsonSerializerOptions _jsonOptions;
+    private readonly Dictionary<string, XPathDocument> _xmlDocs = new();
 
     public AspNetCoreApiDescriptionModelProviderService(
         IApiDescriptionGroupCollectionProvider apiDescriptionProvider,
@@ -22,6 +26,7 @@ public class AspNetCoreApiDescriptionModelProviderService
     {
         _apiDescriptionProvider = apiDescriptionProvider;
         _jsonOptions = jsonOptions?.Value.SerializerOptions ?? new JsonSerializerOptions();
+        LoadXmlDocumentation();
     }
 
     /// <summary>
@@ -46,7 +51,226 @@ public class AspNetCoreApiDescriptionModelProviderService
         return property.Name;
     }
 
+    /// <summary>
+    /// 加载程序集的XML文档文件
+    /// </summary>
+    private void LoadXmlDocumentation()
+    {
+        try
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location))
+                .ToList();
 
+            foreach (var assembly in assemblies)
+            {
+                try
+                {
+                    var xmlPath = Path.ChangeExtension(assembly.Location, ".xml");
+                    if (File.Exists(xmlPath) && !_xmlDocs.ContainsKey(assembly.FullName!))
+                    {
+                        var xmlDoc = new XPathDocument(xmlPath);
+                        _xmlDocs[assembly.FullName!] = xmlDoc;
+                    }
+                }
+                catch
+                {
+                    // 忽略单个程序集XML加载失败
+                }
+            }
+        }
+        catch
+        {
+            // 忽略XML文档加载失败
+        }
+    }
+
+    /// <summary>
+    /// 获取方法的XML注释（包括参数和返回值注释）
+    /// </summary>
+    private (string? summary, string? remarks, Dictionary<string, string> paramComments, string? returnsComment) GetMethodXmlDocumentationFull(MethodInfo method)
+    {
+        try
+        {
+            var assembly = method.DeclaringType?.Assembly;
+            if (assembly?.FullName == null || !_xmlDocs.ContainsKey(assembly.FullName))
+                return (null, null, new Dictionary<string, string>(), null);
+
+            var xmlDoc = _xmlDocs[assembly.FullName];
+            var navigator = xmlDoc.CreateNavigator();
+
+            // 构建方法的XML注释路径
+            var memberName = GetMethodMemberName(method);
+            var xpath = $"/doc/members/member[@name='{memberName}']";
+            var memberNode = navigator.SelectSingleNode(xpath);
+
+            if (memberNode == null) 
+                return (null, null, new Dictionary<string, string>(), null);
+
+            var summaryNode = memberNode.SelectSingleNode("summary");
+            var remarksNode = memberNode.SelectSingleNode("remarks");
+            var returnsNode = memberNode.SelectSingleNode("returns");
+
+            var summary = summaryNode?.Value?.Trim();
+            var remarks = remarksNode?.Value?.Trim();
+            var returnsComment = returnsNode?.Value?.Trim();
+
+            // 获取参数注释
+            var paramComments = new Dictionary<string, string>();
+            var paramNodes = memberNode.Select("param");
+            while (paramNodes.MoveNext())
+            {
+                var paramNode = paramNodes.Current;
+                if (paramNode != null)
+                {
+                    var paramName = paramNode.GetAttribute("name", "");
+                    var paramComment = paramNode.Value?.Trim();
+                    if (!string.IsNullOrEmpty(paramName) && !string.IsNullOrEmpty(paramComment))
+                    {
+                        paramComments[paramName] = paramComment;
+                    }
+                }
+            }
+
+            return (summary, remarks, paramComments, returnsComment);
+        }
+        catch
+        {
+            return (null, null, new Dictionary<string, string>(), null);
+        }
+    }
+
+    /// <summary>
+    /// 获取类型的XML注释
+    /// </summary>
+    private (string? summary, string? remarks) GetTypeXmlDocumentation(Type type)
+    {
+        try
+        {
+            var assembly = type.Assembly;
+            if (assembly?.FullName == null || !_xmlDocs.ContainsKey(assembly.FullName))
+                return (null, null);
+
+            var xmlDoc = _xmlDocs[assembly.FullName];
+            var navigator = xmlDoc.CreateNavigator();
+
+            // 构建类型的XML注释路径
+            var memberName = GetTypeMemberName(type);
+            var xpath = $"/doc/members/member[@name='{memberName}']";
+            var memberNode = navigator.SelectSingleNode(xpath);
+
+            if (memberNode == null) return (null, null);
+
+            var summaryNode = memberNode.SelectSingleNode("summary");
+            var remarksNode = memberNode.SelectSingleNode("remarks");
+
+            var summary = summaryNode?.Value?.Trim();
+            var remarks = remarksNode?.Value?.Trim();
+
+            return (summary, remarks);
+        }
+        catch
+        {
+            return (null, null);
+        }
+    }
+
+    /// <summary>
+    /// 获取属性的XML注释
+    /// </summary>
+    private (string? summary, string? remarks) GetPropertyXmlDocumentation(System.Reflection.PropertyInfo property)
+    {
+        try
+        {
+            var assembly = property.DeclaringType?.Assembly;
+            if (assembly?.FullName == null || !_xmlDocs.ContainsKey(assembly.FullName))
+                return (null, null);
+
+            var xmlDoc = _xmlDocs[assembly.FullName];
+            var navigator = xmlDoc.CreateNavigator();
+
+            // 构建属性的XML注释路径
+            var memberName = GetPropertyMemberName(property);
+            var xpath = $"/doc/members/member[@name='{memberName}']";
+            var memberNode = navigator.SelectSingleNode(xpath);
+
+            if (memberNode == null) return (null, null);
+
+            var summaryNode = memberNode.SelectSingleNode("summary");
+            var remarksNode = memberNode.SelectSingleNode("remarks");
+
+            var summary = summaryNode?.Value?.Trim();
+            var remarks = remarksNode?.Value?.Trim();
+
+            return (summary, remarks);
+        }
+        catch
+        {
+            return (null, null);
+        }
+    }
+
+    /// <summary>
+    /// 构建方法的XML成员名称
+    /// </summary>
+    private static string GetMethodMemberName(MethodInfo method)
+    {
+        var declaringType = method.DeclaringType;
+        var typeName = declaringType?.FullName?.Replace('+', '.');
+        var parameters = method.GetParameters();
+        
+        var memberName = $"M:{typeName}.{method.Name}";
+        
+        if (parameters.Length > 0)
+        {
+            var paramTypes = parameters.Select(p => GetXmlTypeName(p.ParameterType));
+            memberName += $"({string.Join(",", paramTypes)})";
+        }
+        
+        return memberName;
+    }
+
+    /// <summary>
+    /// 构建类型的XML成员名称
+    /// </summary>
+    private static string GetTypeMemberName(Type type)
+    {
+        return $"T:{type.FullName?.Replace('+', '.')}";
+    }
+
+    /// <summary>
+    /// 构建属性的XML成员名称
+    /// </summary>
+    private static string GetPropertyMemberName(System.Reflection.PropertyInfo property)
+    {
+        var declaringType = property.DeclaringType;
+        var typeName = declaringType?.FullName?.Replace('+', '.');
+        return $"P:{typeName}.{property.Name}";
+    }
+
+    /// <summary>
+    /// 获取用于XML文档的类型名称
+    /// </summary>
+    private static string GetXmlTypeName(Type type)
+    {
+        if (type.IsGenericType)
+        {
+            var genericTypeDef = type.GetGenericTypeDefinition();
+            var name = genericTypeDef.FullName?.Replace('+', '.');
+            if (name != null)
+            {
+                var tickIndex = name.IndexOf('`');
+                if (tickIndex > 0)
+                    name = name.Substring(0, tickIndex);
+            }
+            
+            var args = type.GetGenericArguments().Select(GetXmlTypeName);
+            return $"{name}{{{string.Join(",", args)}}}";
+        }
+        
+        return type.FullName?.Replace('+', '.') ?? type.Name;
+    }
+    
     /// <summary>
     /// 获取所有API描述信息和相关类型信息，供前端生成api services
     /// </summary>
@@ -63,20 +287,40 @@ public class AspNetCoreApiDescriptionModelProviderService
             {
                 if (!api.ActionDescriptor.IsControllerAction())
                     continue;
+                
                 var controllerName = api.ActionDescriptor.RouteValues["controller"];
                 var actionName = api.ActionDescriptor.RouteValues["action"];
                 var httpMethod = api.HttpMethod;
                 var relativePath = api.RelativePath;
+                // 获取Action方法的XML注释
+                string? summary = null;
+                string? remarks = null;
+                Dictionary<string, string> paramComments = new();
+                string? returnsComment = null;
+                
+                if (api.ActionDescriptor is ControllerActionDescriptor cad)
+                {
+                    var (methodSummary, methodRemarks, methodParamComments, methodReturnsComment) = GetMethodXmlDocumentationFull(cad.MethodInfo);
+                    summary = methodSummary;
+                    remarks = methodRemarks;
+                    paramComments = methodParamComments;
+                    returnsComment = methodReturnsComment;
+                }
+
                 var parameters = api.ParameterDescriptions.Select(p =>
                 {
                     var isOptional = GetIsOptional(p);
+                    // 查找参数注释
+                    paramComments.TryGetValue(p.Name, out var paramSummary);
+                    
                     return new ApiParameterDescriptionDto
                     {
                         Name = p.Name,
                         Type = p.Type.FullName?.Replace('+', '.'),
                         Source = p.Source.Id,
                         IsOptional = isOptional,
-                        DefaultValue = p.RouteInfo?.DefaultValue
+                        DefaultValue = p.RouteInfo?.DefaultValue,
+                        Summary = paramSummary
                     };
                 }).ToList();
 
@@ -87,19 +331,21 @@ public class AspNetCoreApiDescriptionModelProviderService
                     HttpMethod = httpMethod,
                     Path = relativePath,
                     Parameters = parameters,
-                    ReturnType = api.ActionDescriptor is ControllerActionDescriptor cad
-                        ? CreateReturnTypeModel(cad.MethodInfo.ReturnType)
-                        : null
+                    ReturnType = api.ActionDescriptor is ControllerActionDescriptor cad2
+                        ? CreateReturnTypeModel(cad2.MethodInfo.ReturnType, returnsComment)
+                        : null,
+                    Summary = summary,
+                    Remarks = remarks
                 });
 
-                if (includeTypes && api.ActionDescriptor is ControllerActionDescriptor cad2)
+                if (includeTypes && api.ActionDescriptor is ControllerActionDescriptor cadForTypes)
                 {
-                    foreach (var p in cad2.MethodInfo.GetParameters())
+                    foreach (var p in cadForTypes.MethodInfo.GetParameters())
                     {
                         AddTypeRecursive(types, p.ParameterType);
                     }
 
-                    AddTypeRecursive(types, cad2.MethodInfo.ReturnType);
+                    AddTypeRecursive(types, cadForTypes.MethodInfo.ReturnType);
                 }
             }
         }
@@ -111,7 +357,7 @@ public class AspNetCoreApiDescriptionModelProviderService
         };
     }
 
-    private static ReturnTypeModel? CreateReturnTypeModel(Type? type)
+    private static ReturnTypeModel? CreateReturnTypeModel(Type? type, string? returnsComment = null)
     {
         if (type == null) return null;
         var unwrappedType = UnwrapActionResult(UnwrapTask(type));
@@ -119,7 +365,8 @@ public class AspNetCoreApiDescriptionModelProviderService
         return new ReturnTypeModel
         {
             Type = CalculateTypeName(unwrappedType),
-            TypeSimple = GetSimpleTypeName(unwrappedType)
+            TypeSimple = GetSimpleTypeName(unwrappedType),
+            Summary = returnsComment
         };
     }
 
@@ -349,12 +596,18 @@ public class AspNetCoreApiDescriptionModelProviderService
 
                 var isRequired = p.GetCustomAttributes().Any(a => a.GetType().Name == "RequiredAttribute") ||
                                  (propertyType.IsValueType && Nullable.GetUnderlyingType(propertyType) == null);
+                
+                // 获取属性的XML注释
+                var (propSummary, propRemarks) = GetPropertyXmlDocumentation(p);
+                
                 return new TypePropertyDescriptionDto
                 {
                     Name = GetJsonPropertyName(p), // 使用实际的 JSON 属性名
                     Type = FriendlyTypeName(CalculateTypeName(propertyType)),
                     IsNullable = isNullable,
-                    IsRequired = isRequired
+                    IsRequired = isRequired,
+                    Summary = propSummary,
+                    Remarks = propRemarks
                 };
             }).ToList();
 
@@ -392,6 +645,9 @@ public class AspNetCoreApiDescriptionModelProviderService
             }
         }
 
+        // 获取类型的XML注释
+        var (typeSummary, typeRemarks) = GetTypeXmlDocumentation(type);
+
         types[typeName] = new TypeDescriptionDto
         {
             Name = pureName,
@@ -400,7 +656,9 @@ public class AspNetCoreApiDescriptionModelProviderService
                 ? FriendlyTypeName(CalculateTypeName(type.BaseType))
                 : null,
             GenericArguments = genericArgs,
-            Properties = props
+            Properties = props,
+            Summary = typeSummary,
+            Remarks = typeRemarks
         };
         foreach (var p in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {

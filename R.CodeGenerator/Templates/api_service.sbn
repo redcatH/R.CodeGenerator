@@ -4,7 +4,27 @@
 
 const {{ service_name }} = {
 {{~ for api in apis ~}}
-
+{{~ if api.has_comment ~}}
+  /**
+{{~ if api.summary ~}}
+   * {{ api.summary }}
+{{~ end ~}}
+{{~ if api.remarks ~}}
+{{~ if api.summary ~}}
+   *
+{{~ end ~}}
+   * {{ api.remarks }}
+{{~ end ~}}
+{{~ for param in api.parameters ~}}
+{{~ if param.has_comment ~}}
+   * @param {{ param.name }} {{ param.summary }}
+{{~ end ~}}
+{{~ end ~}}
+{{~ if api.return_comment ~}}
+   * @returns {{ api.return_comment }}
+{{~ end ~}}
+   */
+{{~ end ~}}
   {{ api.action_name }}({{ api.param_list }}) {
     return requestHttp<{{ api.return_type }}>({
       url: '{{ api.path }}',

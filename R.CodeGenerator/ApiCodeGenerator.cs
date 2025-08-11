@@ -68,8 +68,12 @@ public class ApiCodeGenerator
                 if (type.Namespace == null || !type.Namespace.StartsWith(namespacePrefix))
                     continue;
                 // 如果有基类且基类未生成，跳过
-                if (!string.IsNullOrEmpty(type.BaseType) && types.ContainsKey(type.BaseType) && !generatedTypes.Contains(types[type.BaseType].Name))
-                    continue;
+                if (!string.IsNullOrEmpty(type.BaseType) && types.ContainsKey(type.BaseType))
+                {
+                    var baseTypeName = types[type.BaseType].Name;
+                    if (!string.IsNullOrEmpty(baseTypeName) && !generatedTypes.Contains(baseTypeName))
+                        continue;
+                }
 
                 var lines = new List<string>();
                 // 需要 import 的类型
@@ -86,15 +90,30 @@ public class ApiCodeGenerator
                         : "";
                     baseClause = $" extends {baseType.Name}{baseGenericParams}";
                     // 只要不是全局类型就 import
-                    if (baseType.Name != "object" && baseType.Name != "any" && baseType.Name != type.Name)
+                    if (!string.IsNullOrEmpty(baseType.Name) && baseType.Name != "object" && baseType.Name != "any" && baseType.Name != type.Name)
                         importSet.Add(baseType.Name);
                 }
+                // 添加类型的 JSDoc 注释
+                if (!string.IsNullOrEmpty(type.Summary) || !string.IsNullOrEmpty(type.Remarks))
+                {
+                    lines.Add("/**");
+                    if (!string.IsNullOrEmpty(type.Summary))
+                        lines.Add($" * {type.Summary}");
+                    if (!string.IsNullOrEmpty(type.Remarks))
+                    {
+                        if (!string.IsNullOrEmpty(type.Summary))
+                            lines.Add(" *");
+                        lines.Add($" * {type.Remarks}");
+                    }
+                    lines.Add(" */");
+                }
+
                 lines.Add($"{(useInterface ? "export interface" : "export type")} {type.Name}{genericParams}{baseClause} {{");
                 foreach (var prop in type.Properties)
                 {
-                    string tsType = null;
+                    string? tsType = null;
                     int idx = -1;
-                    if (type.GenericArguments != null && (idx = type.GenericArguments.IndexOf(prop.Type)) >= 0)
+                    if (type.GenericArguments != null && prop.Type != null && (idx = type.GenericArguments.IndexOf(prop.Type)) >= 0)
                     {
                         tsType = $"T{idx}";
                     }
@@ -106,6 +125,22 @@ public class ApiCodeGenerator
                             importSet.Add(tsType);
                     }
                     var optional = prop.IsNullable || !prop.IsRequired ? "?" : "";
+                    
+                    // 添加属性的 JSDoc 注释
+                    if (!string.IsNullOrEmpty(prop.Summary) || !string.IsNullOrEmpty(prop.Remarks))
+                    {
+                        lines.Add("  /**");
+                        if (!string.IsNullOrEmpty(prop.Summary))
+                            lines.Add($"   * {prop.Summary}");
+                        if (!string.IsNullOrEmpty(prop.Remarks))
+                        {
+                            if (!string.IsNullOrEmpty(prop.Summary))
+                                lines.Add("   *");
+                            lines.Add($"   * {prop.Remarks}");
+                        }
+                        lines.Add("   */");
+                    }
+                    
                     lines.Add($"  {prop.Name}{optional}: {tsType};");
                 }
                 lines.Add("}");
@@ -119,8 +154,10 @@ public class ApiCodeGenerator
                 File.WriteAllText(filePath, string.Join("\n", lines));
                 Console.WriteLine($"[Type] Generated: {filePath}");
                 if (!string.IsNullOrEmpty(type.Name))
+                {
                     typeNames.Add(type.Name);
-                generatedTypes.Add(type.Name);
+                    generatedTypes.Add(type.Name);
+                }
                 toRemove.Add(kv.Key);
                 progress = true;
             }
@@ -149,24 +186,46 @@ public class ApiCodeGenerator
         foreach (var group in groups)
         {
             var serviceName = group.Key + "Service";
-            var apiList = group.Select(api => new
+            var apiList = group.Select(api =>
             {
-                action_name = GenerateFriendlyActionName(group.Key, api.Action, api.HttpMethod),
-                param_list = string.Join(", ", api.Parameters.Select(p =>
+                // 构建参数列表和参数注释信息
+                var paramInfos = api.Parameters.Select(p =>
                 {
                     var tsType = MapCSharpTypeToTs(p.Type);
                     if (!IsTsBasicType(tsType))
                         tsType = $"types.{tsType}";
-                    return $"{p.Name}{(p.IsOptional ? "?" : "")}: {tsType}";
-                })),
-                return_type = api.ReturnType != null && !string.IsNullOrEmpty(api.ReturnType.Type)
-                    ? GetReturnType(types, api,configUnwrapGenericTypes.ToHashSet())
-                    : "any",
-                path = api.Path,
-                http_method = api.HttpMethod ?? "get",
-                data_line = api.HttpMethod?.ToUpper() == "GET"
-                    ? $"params: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}"
-                    : $"data: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}"
+                    return new
+                    {
+                        name = p.Name,
+                        type = tsType,
+                        optional = p.IsOptional,
+                        param_string = $"{p.Name}{(p.IsOptional ? "?" : "")}: {tsType}",
+                        summary = p.Summary ?? string.Empty,
+                        has_comment = !string.IsNullOrEmpty(p.Summary)
+                    };
+                }).ToList();
+
+                var result = new
+                {
+                    action_name = GenerateFriendlyActionName(group.Key, api.Action, api.HttpMethod),
+                    param_list = string.Join(", ", paramInfos.Select(p => p.param_string)),
+                    parameters = paramInfos, // 添加参数详细信息
+                    return_type = api.ReturnType != null && !string.IsNullOrEmpty(api.ReturnType.Type)
+                        ? GetReturnType(types, api, configUnwrapGenericTypes.ToHashSet())
+                        : "any",
+                    return_comment = api.ReturnType?.Summary ?? string.Empty, // 添加返回值注释
+                    path = api.Path,
+                    http_method = api.HttpMethod ?? "get",
+                    data_line = api.HttpMethod?.ToUpper() == "GET"
+                        ? $"params: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}"
+                        : $"data: {{ {string.Join(", ", api.Parameters.Select(p => p.Name))} }}",
+                    // 添加注释信息
+                    summary = api.Summary ?? string.Empty,
+                    remarks = api.Remarks ?? string.Empty,
+                    has_comment = !string.IsNullOrEmpty(api.Summary) || !string.IsNullOrEmpty(api.Remarks) || 
+                                 paramInfos.Any(p => p.has_comment) || !string.IsNullOrEmpty(api.ReturnType?.Summary)
+                };
+                return result;
             }).ToList();
 
             var renderObj = new
@@ -187,10 +246,10 @@ public class ApiCodeGenerator
     private static string GetReturnType(Dictionary<string, TypeDescriptionDto> types, ApiDescriptionDto api,HashSet<string> unwrapGenericTypes)
     {
         string returnType;
-        if (types.TryGetValue(api.ReturnType.Type, out var retTypeDesc))
+        if (api.ReturnType?.Type != null && types.TryGetValue(api.ReturnType.Type, out var retTypeDesc))
         {
             // 判断是否需要解包
-            if (unwrapGenericTypes.Contains(retTypeDesc.Name)
+            if (!string.IsNullOrEmpty(retTypeDesc.Name) && unwrapGenericTypes.Contains(retTypeDesc.Name)
                 && retTypeDesc.GenericArguments != null
                 && retTypeDesc.GenericArguments.Count == 1)
             {
@@ -200,7 +259,7 @@ public class ApiCodeGenerator
                 return tsType;
             }
             
-            returnType = retTypeDesc.Name;
+            returnType = retTypeDesc.Name ?? "any";
             if (retTypeDesc.GenericArguments != null && retTypeDesc.GenericArguments.Count > 0)
             {
                 // 泛型参数类型加 types. 前缀（如有必要）
@@ -218,7 +277,7 @@ public class ApiCodeGenerator
         }
         else
         {
-            returnType = MapCSharpTypeToTs(api.ReturnType.Type);
+            returnType = MapCSharpTypeToTs(api.ReturnType?.Type);
             if (!IsTsBasicType(returnType) && !returnType.StartsWith("types."))
                 returnType = $"types.{returnType}";
         }

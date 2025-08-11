@@ -1,0 +1,12 @@
+{
+  "outputDir": "generated\\api",
+  "typesDir": "generated\\types",
+  "useInterface": true,
+  "importLine": [
+    "import { request as requestHttp } from '../request';"
+  ],
+  "namespacePrefix": "R.DescriptionModelGenerator",
+  "unwrapGenericTypes": [
+    "ApiResult"
+  ]
+}
