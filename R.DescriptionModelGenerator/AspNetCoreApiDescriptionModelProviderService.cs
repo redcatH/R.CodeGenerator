@@ -1,19 +1,49 @@
 using System.Collections;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.Extensions.Options;
+using System.Linq;
 
 namespace R.DescriptionModelGenerator;
 
 public class AspNetCoreApiDescriptionModelProviderService
 {
     private readonly IApiDescriptionGroupCollectionProvider _apiDescriptionProvider;
+    private readonly JsonSerializerOptions _jsonOptions;
 
     public AspNetCoreApiDescriptionModelProviderService(
-        IApiDescriptionGroupCollectionProvider apiDescriptionProvider)
+        IApiDescriptionGroupCollectionProvider apiDescriptionProvider,
+        IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>? jsonOptions = null)
     {
         _apiDescriptionProvider = apiDescriptionProvider;
+        _jsonOptions = jsonOptions?.Value.SerializerOptions ?? new JsonSerializerOptions();
+    }
+
+    /// <summary>
+    /// 根据 JsonPropertyName 特性和 PropertyNamingPolicy 获取实际的 JSON 属性名
+    /// </summary>
+    private string GetJsonPropertyName(System.Reflection.PropertyInfo property)
+    {
+        // 1. 优先检查 JsonPropertyName 特性 - 使用 Attribute.GetCustomAttribute
+        var jsonPropertyNameAttr = Attribute.GetCustomAttribute(property, typeof(JsonPropertyNameAttribute));
+        if (jsonPropertyNameAttr is JsonPropertyNameAttribute attr)
+        {
+            return attr.Name;
+        }
+
+        // 2. 使用配置的 PropertyNamingPolicy
+        if (_jsonOptions.PropertyNamingPolicy != null)
+        {
+            return _jsonOptions.PropertyNamingPolicy.ConvertName(property.Name);
+        }
+
+        // 3. 默认返回原属性名
+        return property.Name;
     }
 
 
@@ -174,23 +204,6 @@ public class AspNetCoreApiDescriptionModelProviderService
         return $"{baseName}<{argNames}>";
     }
 
-    // 具体类型定义
-    // public class ApiDescriptionModelResult
-    // {
-    //     public List<ApiDescriptionDto> Apis { get; set; } = new();
-    //     public Dictionary<string, TypeDescriptionDto> Types { get; set; } = new();
-    // }
-    //
-    // public class ApiDescriptionDto
-    // {
-    //     public string? Controller { get; set; }
-    //     public string? Action { get; set; }
-    //     public string? HttpMethod { get; set; }
-    //     public string? Path { get; set; }
-    //     public List<ApiParameterDescriptionDto> Parameters { get; set; } = new();
-    //     public ReturnTypeModel? ReturnType { get; set; }
-    // }
-
     private static bool GetIsOptional(ApiParameterDescription p)
     {
         var isOptional = false;
@@ -338,7 +351,7 @@ public class AspNetCoreApiDescriptionModelProviderService
                                  (propertyType.IsValueType && Nullable.GetUnderlyingType(propertyType) == null);
                 return new TypePropertyDescriptionDto
                 {
-                    Name = p.Name,
+                    Name = GetJsonPropertyName(p), // 使用实际的 JSON 属性名
                     Type = FriendlyTypeName(CalculateTypeName(propertyType)),
                     IsNullable = isNullable,
                     IsRequired = isRequired
