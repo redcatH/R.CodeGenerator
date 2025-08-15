@@ -257,6 +257,123 @@ public class ApiCodeGenerator
     }
 
     /// <summary>
+    /// 为 TypeScript 类型添加 types. 前缀（智能处理数组、联合类型等）
+    /// </summary>
+    private static string AddTypesPrefix(string tsType, Dictionary<string, TypeDescriptionDto> types)
+    {
+        // 基础类型不需要前缀
+        if (IsTsBasicType(tsType))
+            return tsType;
+            
+        // 已经有前缀的不重复添加
+        if (tsType.StartsWith("types."))
+            return tsType;
+            
+        // 处理数组类型 (例如: Device[] -> types.Device[])
+        if (tsType.EndsWith("[]"))
+        {
+            var elementType = tsType.Substring(0, tsType.Length - 2);
+            var prefixedElementType = AddTypesPrefix(elementType, types);
+            return $"{prefixedElementType}[]";
+        }
+        
+        // 处理联合类型 (例如: null | Device -> null | types.Device)
+        if (tsType.Contains(" | "))
+        {
+            var parts = tsType.Split(new[] { " | " }, StringSplitOptions.RemoveEmptyEntries);
+            var prefixedParts = parts.Select(part => AddTypesPrefix(part.Trim(), types));
+            return string.Join(" | ", prefixedParts);
+        }
+        
+        // 处理泛型类型 (例如: List<Device> -> types.List<types.Device>)
+        var genericMatch = Regex.Match(tsType, @"^([^<]+)<(.+)>$");
+        if (genericMatch.Success)
+        {
+            var baseType = genericMatch.Groups[1].Value.Trim();
+            var genericArgs = genericMatch.Groups[2].Value;
+            
+            var prefixedBaseType = types.Values.Any(t => t.Name == baseType) ? $"types.{baseType}" : baseType;
+            
+            // 递归处理泛型参数
+            var args = ParseGenericArguments(genericArgs);
+            var prefixedArgs = args.Select(arg => AddTypesPrefix(arg, types));
+            
+            return $"{prefixedBaseType}<{string.Join(", ", prefixedArgs)}>";
+        }
+        
+        // 简单类型名
+        if (types.Values.Any(t => t.Name == tsType))
+        {
+            return $"types.{tsType}";
+        }
+        
+        // 不需要前缀的类型
+        return tsType;
+    }
+
+    /// <summary>
+    /// 从 TypeScript 类型字符串中提取需要 import 的类型名
+    /// </summary>
+    private static HashSet<string> ExtractImportableTypeNames(string tsType, Dictionary<string, TypeDescriptionDto> types)
+    {
+        var result = new HashSet<string>();
+        
+        // 跳过基础类型
+        if (IsTsBasicType(tsType))
+            return result;
+            
+        // 处理数组类型 (例如: Device[] -> Device)
+        if (tsType.EndsWith("[]"))
+        {
+            var elementType = tsType.Substring(0, tsType.Length - 2);
+            result.UnionWith(ExtractImportableTypeNames(elementType, types));
+            return result;
+        }
+        
+        // 处理联合类型 (例如: null | Device -> Device)
+        if (tsType.Contains(" | "))
+        {
+            var parts = tsType.Split(new[] { " | " }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var part in parts)
+            {
+                result.UnionWith(ExtractImportableTypeNames(part.Trim(), types));
+            }
+            return result;
+        }
+        
+        // 处理泛型类型 (例如: List<Device> -> Device)
+        var genericMatch = Regex.Match(tsType, @"^([^<]+)<(.+)>$");
+        if (genericMatch.Success)
+        {
+            var baseType = genericMatch.Groups[1].Value.Trim();
+            var genericArgs = genericMatch.Groups[2].Value;
+            
+            // 递归处理泛型参数
+            var args = ParseGenericArguments(genericArgs);
+            foreach (var arg in args)
+            {
+                result.UnionWith(ExtractImportableTypeNames(arg, types));
+            }
+            
+            // 检查基础类型是否需要 import
+            if (types.Values.Any(t => t.Name == baseType))
+            {
+                result.Add(baseType);
+            }
+            
+            return result;
+        }
+        
+        // 简单类型名检查
+        if (types.Values.Any(t => t.Name == tsType))
+        {
+            result.Add(tsType);
+        }
+        
+        return result;
+    }
+
+    /// <summary>
     /// 判断 tsType 是否为 TypeScript 基础类型
     /// </summary>
     private static bool IsTsBasicType(string tsType)
@@ -388,9 +505,15 @@ public class ApiCodeGenerator
                     else
                     {
                         tsType = MapCSharpTypeToTs(prop.Type);
-                        // 需要 import 的属性类型（非基础类型、非泛型参数、非自身）
-                        if (!IsTsBasicType(tsType) && types.Values.Any(t => t.Name == tsType) && tsType != type.Name)
-                            importSet.Add(tsType);
+                        // 提取需要 import 的类型名
+                        var importableTypes = ExtractImportableTypeNames(tsType, types);
+                        foreach (var importType in importableTypes)
+                        {
+                            if (importType != type.Name) // 排除自身
+                            {
+                                importSet.Add(importType);
+                            }
+                        }
                     }
 
                     var optional = prop.IsNullable || !prop.IsRequired ? "?" : "";
@@ -412,7 +535,7 @@ public class ApiCodeGenerator
                 // 先写 import 语句
                 if (importSet.Count > 0)
                 {
-                    var importLines = importSet.Select(n => $"import {{ {n} }} from './{n}';");
+                    var importLines = importSet.Select(n => $"import type {{ {n} }} from './{n}';");
                     lines.InsertRange(0, importLines);
                 }
 
@@ -460,14 +583,13 @@ public class ApiCodeGenerator
                 var paramInfos = api.Parameters.Select(p =>
                 {
                     var tsType = MapCSharpTypeToTs(p.Type);
-                    if (!IsTsBasicType(tsType))
-                        tsType = $"types.{tsType}";
+                    var typedTsType = AddTypesPrefix(tsType, types);
                     return new
                     {
                         name = p.Name,
-                        type = tsType,
+                        type = typedTsType,
                         optional = p.IsOptional,
-                        param_string = $"{p.Name}{(p.IsOptional ? "?" : "")}: {tsType}",
+                        param_string = $"{p.Name}{(p.IsOptional ? "?" : "")}: {typedTsType}",
                         summary = SanitizeComment(p.Summary), // 清理参数注释
                         has_comment = !string.IsNullOrEmpty(SanitizeComment(p.Summary))
                     };
@@ -526,9 +648,7 @@ public class ApiCodeGenerator
                                                         && retTypeDesc.GenericArguments.Count == 1)
             {
                 var tsType = MapCSharpTypeToTs(retTypeDesc.GenericArguments[0]);
-                if (!IsTsBasicType(tsType) && !tsType.StartsWith("types."))
-                    tsType = $"types.{tsType}";
-                return tsType;
+                return AddTypesPrefix(tsType, types);
             }
 
             returnType = retTypeDesc.Name ?? "any";
@@ -538,9 +658,7 @@ public class ApiCodeGenerator
                 var genArgs = retTypeDesc.GenericArguments.Select(arg =>
                 {
                     var tsType = MapCSharpTypeToTs(arg);
-                    if (!IsTsBasicType(tsType) && !tsType.StartsWith("types."))
-                        tsType = $"types.{tsType}";
-                    return tsType;
+                    return AddTypesPrefix(tsType, types);
                 });
                 returnType += $"<{string.Join(", ", genArgs)}>";
             }
@@ -564,16 +682,13 @@ public class ApiCodeGenerator
                 {
                     // 解包：返回泛型参数而不是包装类型
                     var tsType = MapCSharpTypeToTs(typeInfo.GenericArguments[0]);
-                    if (!IsTsBasicType(tsType) && !tsType.StartsWith("types."))
-                        tsType = $"types.{tsType}";
-                    return tsType;
+                    return AddTypesPrefix(tsType, types);
                 }
             }
 
             // 常规类型映射
             returnType = MapCSharpTypeToTs(api.ReturnType?.Type);
-            if (!IsTsBasicType(returnType) && !returnType.StartsWith("types."))
-                returnType = $"types.{returnType}";
+            returnType = AddTypesPrefix(returnType, types);
         }
 
         return returnType;
