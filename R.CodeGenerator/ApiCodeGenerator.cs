@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using R.DescriptionModelGenerator;
 using Scriban;
 
@@ -6,45 +7,253 @@ namespace R.CodeGenerator;
 public class ApiCodeGenerator
 {
     private readonly ApiGeneratorConfig _config;
-    
+
     public ApiCodeGenerator(ApiGeneratorConfig? config = null)
     {
         _config = config ?? new ApiGeneratorConfig();
     }
+
     public static string MapCSharpTypeToTs(string? csharpType)
     {
         if (string.IsNullOrEmpty(csharpType)) return "any";
-        if (csharpType.StartsWith("System.String")) return "string";
-        if (csharpType.StartsWith("System.Int") || csharpType.StartsWith("System.Double") ||
-            csharpType.StartsWith("System.Decimal")) return "number";
-        if (csharpType.StartsWith("System.Boolean")) return "boolean";
-        if (csharpType.StartsWith("System.Collections.Generic.List") || csharpType.EndsWith("[]"))
+
+        // 如果已经是 TypeScript 类型语法，直接返回
+        if (csharpType.StartsWith("types.") || csharpType.Contains(">>"))
         {
-            var inner = csharpType.Contains("<") ? csharpType.Split('<', '>')[1] : "any";
-            return $"{MapCSharpTypeToTs(inner)}[]";
+            return csharpType;
         }
 
-        // 泛型 Task<T>
-        if (csharpType.StartsWith("System.Threading.Tasks.Task"))
+        // 使用正则表达式解析泛型类型
+        var typeInfo = ParseGenericType(csharpType);
+
+        // 映射基础类型
+        var mappedType = MapBasicType(typeInfo.BaseType);
+
+        // 如果有泛型参数，递归处理
+        if (typeInfo.GenericArguments.Count > 0)
         {
-            var inner = csharpType.Contains("<") ? csharpType.Split('<', '>')[1] : "any";
-            return MapCSharpTypeToTs(inner);
+            var genericArgs = typeInfo.GenericArguments.Select(MapCSharpTypeToTs).ToArray();
+
+            // 特殊处理可空类型 Nullable<T>
+            if (IsNullableType(typeInfo.BaseType))
+            {
+                // 可空类型在 TypeScript 中使用联合类型，按约定 null 在前
+                return $"null | {genericArgs[0]}";
+            }
+
+            // 特殊处理列表类型
+            if (IsListType(typeInfo.BaseType))
+            {
+                return $"{genericArgs[0]}[]";
+            }
+
+            return $"{mappedType}<{string.Join(", ", genericArgs)}>";
         }
 
-        // 直接映射常见类型
-        if (csharpType.StartsWith("Microsoft.AspNetCore.Mvc.IActionResult") ||
-            csharpType.StartsWith("Microsoft.AspNetCore.Mvc.ActionResult")) return "any";
-        if (csharpType.StartsWith("Microsoft.AspNetCore.Mvc.FileResult")) return "any";
-        if (csharpType.StartsWith("System.DateTime") || csharpType.StartsWith("System.DateTimeOffset")) return "string";
-        if (csharpType.StartsWith("System.Guid")) return "string";
-        // 只为 VividCMS. 命名空间下的类型生成 TS 类型，否则 any
-        if (csharpType.StartsWith("VividCMS."))
+        // 特殊处理无参数的 Task
+        if (IsTaskType(typeInfo.BaseType))
         {
-            // 复杂类型名处理
-            return csharpType.Split('.').Last().Replace("+", ".");
+            return "Promise<void>";
         }
 
+        return mappedType;
+    }
+
+    /// <summary>
+    /// 解析泛型类型信息
+    /// </summary>
+    private static TypeParseResult ParseGenericType(string typeString)
+    {
+        // 正则表达式匹配泛型类型: BaseType<Arg1, Arg2, ...>
+        var genericPattern = @"^([^<]+)(?:<(.+)>)?$";
+        var match = Regex.Match(typeString.Trim(), genericPattern);
+
+        if (!match.Success)
+        {
+            return new TypeParseResult { BaseType = typeString.Trim(), GenericArguments = new List<string>() };
+        }
+
+        var baseType = match.Groups[1].Value.Trim();
+        var genericPart = match.Groups[2].Value;
+
+        var genericArgs = new List<string>();
+        if (!string.IsNullOrEmpty(genericPart))
+        {
+            // 解析泛型参数，考虑嵌套泛型
+            genericArgs = ParseGenericArguments(genericPart);
+        }
+
+        return new TypeParseResult { BaseType = baseType, GenericArguments = genericArgs };
+    }
+
+    /// <summary>
+    /// 解析泛型参数列表，处理嵌套泛型
+    /// </summary>
+    private static List<string> ParseGenericArguments(string argsString)
+    {
+        var args = new List<string>();
+        var current = "";
+        var depth = 0;
+
+        for (int i = 0; i < argsString.Length; i++)
+        {
+            var ch = argsString[i];
+
+            if (ch == '<')
+            {
+                depth++;
+                current += ch;
+            }
+            else if (ch == '>')
+            {
+                depth--;
+                current += ch;
+            }
+            else if (ch == ',' && depth == 0)
+            {
+                // 只有在顶层才分割参数
+                if (!string.IsNullOrWhiteSpace(current))
+                {
+                    args.Add(current.Trim());
+                }
+
+                current = "";
+            }
+            else
+            {
+                current += ch;
+            }
+        }
+
+        // 添加最后一个参数
+        if (!string.IsNullOrWhiteSpace(current))
+        {
+            args.Add(current.Trim());
+        }
+
+        return args;
+    }
+
+    /// <summary>
+    /// 映射基础类型
+    /// </summary>
+    private static string MapBasicType(string baseType)
+    {
+        // System 类型映射
+        var systemTypeMappings = new Dictionary<string, string>
+        {
+            { "System.String", "string" },
+            { "System.Int32", "number" },
+            { "System.Int64", "number" },
+            { "System.Int16", "number" },
+            { "System.Double", "number" },
+            { "System.Single", "number" },
+            { "System.Decimal", "number" },
+            { "System.Boolean", "boolean" },
+            { "System.Object", "any" },
+            { "System.DateTime", "string" },
+            { "System.DateTimeOffset", "string" },
+            { "System.Guid", "string" },
+            // 可空类型的基础映射（会被泛型处理覆盖）
+            { "System.Nullable", "any" },
+        };
+
+        // 精确匹配
+        if (systemTypeMappings.TryGetValue(baseType, out var mapped))
+        {
+            return mapped;
+        }
+
+        // 前缀匹配（为了兼容性）
+        foreach (var kvp in systemTypeMappings)
+        {
+            if (baseType.StartsWith(kvp.Key))
+            {
+                return kvp.Value;
+            }
+        }
+
+        // 特殊类型处理
+        if (IsListType(baseType))
+        {
+            return "any[]"; // 无泛型参数的列表返回 any[]
+        }
+
+        if (IsTaskType(baseType))
+        {
+            return "Promise"; // Task<T> 映射为 Promise<T>，无参数的 Task 映射为 Promise<void>
+        }
+
+        // ASP.NET Core 类型
+        if (baseType.StartsWith("Microsoft.AspNetCore.Mvc."))
+        {
+            return "any";
+        }
+
+        // VividCMS 类型处理
+        if (baseType.StartsWith("VividCMS."))
+        {
+            return ExtractVividCmsTypeName(baseType);
+        }
+
+        // 默认返回 any
         return "any";
+    }
+
+    /// <summary>
+    /// 检查是否是可空类型
+    /// </summary>
+    private static bool IsNullableType(string type)
+    {
+        return type.StartsWith("System.Nullable");
+    }
+
+    /// <summary>
+    /// 检查是否是列表类型
+    /// </summary>
+    private static bool IsListType(string type)
+    {
+        return type.StartsWith("System.Collections.Generic.List") ||
+               type.EndsWith("[]") ||
+               type.StartsWith("System.Collections.Generic.IList") ||
+               type.StartsWith("System.Collections.Generic.IEnumerable");
+    }
+
+    /// <summary>
+    /// 检查是否是 Task 类型
+    /// </summary>
+    private static bool IsTaskType(string type)
+    {
+        return type.StartsWith("System.Threading.Tasks.Task");
+    }
+
+    /// <summary>
+    /// 提取 VividCMS 类型名
+    /// </summary>
+    private static string ExtractVividCmsTypeName(string fullTypeName)
+    {
+        // 使用正则表达式提取最后一个命名空间部分
+        var pattern = @"VividCMS\.(?:[^.]+\.)*([^.+]+(?:\+.+)?)$";
+        var match = Regex.Match(fullTypeName, pattern);
+
+        if (match.Success)
+        {
+            var typeName = match.Groups[1].Value;
+            // 处理嵌套类型的 + 符号
+            return typeName.Replace("+", ".");
+        }
+
+        // fallback: 使用原来的方法
+        return fullTypeName.Split('.').Last().Replace("+", ".");
+    }
+
+    /// <summary>
+    /// 类型解析结果
+    /// </summary>
+    private class TypeParseResult
+    {
+        public string BaseType { get; set; } = "";
+        public List<string> GenericArguments { get; set; } = new List<string>();
     }
 
     /// <summary>
@@ -52,7 +261,19 @@ public class ApiCodeGenerator
     /// </summary>
     private static bool IsTsBasicType(string tsType)
     {
-        return tsType == "string" || tsType == "number" || tsType == "boolean" || tsType == "any";
+        // 基础类型
+        if (tsType == "string" || tsType == "number" || tsType == "boolean" || tsType == "any")
+            return true;
+            
+        // 联合类型（如 null | number 或 number | null）
+        if (tsType.Contains(" | "))
+        {
+            var parts = tsType.Split(new[] { " | " }, StringSplitOptions.RemoveEmptyEntries);
+            return parts.All(part => part == "null" || part == "undefined" || 
+                           part == "string" || part == "number" || part == "boolean" || part == "any");
+        }
+        
+        return false;
     }
 
     /// <summary>
@@ -69,13 +290,13 @@ public class ApiCodeGenerator
     private List<string> GenerateJSDocComment(string? summary, string? remarks)
     {
         var lines = new List<string>();
-        
-        if (!_config.GenerateDetailedComments || 
+
+        if (!_config.GenerateDetailedComments ||
             (string.IsNullOrWhiteSpace(summary) && string.IsNullOrWhiteSpace(remarks)))
             return lines;
 
         lines.Add("/**");
-        
+
         // 处理 summary
         if (!string.IsNullOrWhiteSpace(summary))
         {
@@ -85,20 +306,20 @@ public class ApiCodeGenerator
                 lines.Add($" * {line}");
             }
         }
-        
+
         // 处理 remarks
         if (!string.IsNullOrWhiteSpace(remarks))
         {
             if (!string.IsNullOrWhiteSpace(summary))
                 lines.Add(" *");
-            
+
             var remarksLines = CommentSanitizer.SanitizeMultiLine(remarks, _config.CommentConfig);
             foreach (var line in remarksLines)
             {
                 lines.Add($" * {line}");
             }
         }
-        
+
         lines.Add(" */");
         return lines;
     }
@@ -144,19 +365,23 @@ public class ApiCodeGenerator
                         : "";
                     baseClause = $" extends {baseType.Name}{baseGenericParams}";
                     // 只要不是全局类型就 import
-                    if (!string.IsNullOrEmpty(baseType.Name) && baseType.Name != "object" && baseType.Name != "any" && baseType.Name != type.Name)
+                    if (!string.IsNullOrEmpty(baseType.Name) && baseType.Name != "object" && baseType.Name != "any" &&
+                        baseType.Name != type.Name)
                         importSet.Add(baseType.Name);
                 }
+
                 // 添加类型的 JSDoc 注释
                 var typeCommentLines = GenerateJSDocComment(type.Summary, type.Remarks);
                 lines.AddRange(typeCommentLines);
 
-                lines.Add($"{(useInterface ? "export interface" : "export type")} {type.Name}{genericParams}{baseClause} {{");
+                lines.Add(
+                    $"{(useInterface ? "export interface" : "export type")} {type.Name}{genericParams}{baseClause} {{");
                 foreach (var prop in type.Properties)
                 {
                     string? tsType = null;
                     int idx = -1;
-                    if (type.GenericArguments != null && prop.Type != null && (idx = type.GenericArguments.IndexOf(prop.Type)) >= 0)
+                    if (type.GenericArguments != null && prop.Type != null &&
+                        (idx = type.GenericArguments.IndexOf(prop.Type)) >= 0)
                     {
                         tsType = $"T{idx}";
                     }
@@ -167,20 +392,22 @@ public class ApiCodeGenerator
                         if (!IsTsBasicType(tsType) && types.Values.Any(t => t.Name == tsType) && tsType != type.Name)
                             importSet.Add(tsType);
                     }
+
                     var optional = prop.IsNullable || !prop.IsRequired ? "?" : "";
-                    
+
                     // 添加属性的 JSDoc 注释
                     var propCommentLines = GenerateJSDocComment(prop.Summary, prop.Remarks);
                     if (propCommentLines.Count > 0)
                     {
                         // 为属性注释添加缩进
-                        var indentedLines = propCommentLines.Select(line => 
+                        var indentedLines = propCommentLines.Select(line =>
                             line == "/**" || line == " */" ? $"  {line}" : $"  {line}");
                         lines.AddRange(indentedLines);
                     }
-                    
+
                     lines.Add($"  {prop.Name}{optional}: {tsType};");
                 }
+
                 lines.Add("}");
                 // 先写 import 语句
                 if (importSet.Count > 0)
@@ -188,6 +415,7 @@ public class ApiCodeGenerator
                     var importLines = importSet.Select(n => $"import {{ {n} }} from './{n}';");
                     lines.InsertRange(0, importLines);
                 }
+
                 var filePath = Path.Combine(typesDir, $"{type.Name}.ts");
                 File.WriteAllText(filePath, string.Join("\n", lines));
                 Console.WriteLine($"[Type] Generated: {filePath}");
@@ -196,9 +424,11 @@ public class ApiCodeGenerator
                     typeNames.Add(type.Name);
                     generatedTypes.Add(type.Name);
                 }
+
                 toRemove.Add(kv.Key);
                 progress = true;
             }
+
             foreach (var key in toRemove)
                 pendingTypes.Remove(key);
         } while (pendingTypes.Count > 0 && progress);
@@ -218,7 +448,7 @@ public class ApiCodeGenerator
     {
         Directory.CreateDirectory(outputDir);
         var groups = apis.GroupBy(a => a.Controller);
-        var templateText = File.ReadAllText("templates/api_service.sbn");
+        var templateText = File.ReadAllText("templates/api_service_vben.sbn");
         var template = Template.Parse(templateText);
 
         foreach (var group in groups)
@@ -260,8 +490,8 @@ public class ApiCodeGenerator
                     // 添加注释信息
                     summary = SanitizeComment(api.Summary ?? string.Empty), // 清理方法注释
                     remarks = api.Remarks ?? string.Empty,
-                    has_comment = !string.IsNullOrEmpty(api.Summary) || !string.IsNullOrEmpty(api.Remarks) || 
-                                 paramInfos.Any(p => p.has_comment) || !string.IsNullOrEmpty(api.ReturnType?.Summary)
+                    has_comment = !string.IsNullOrEmpty(api.Summary) || !string.IsNullOrEmpty(api.Remarks) ||
+                                  paramInfos.Any(p => p.has_comment) || !string.IsNullOrEmpty(api.ReturnType?.Summary)
                 };
                 return result;
             }).ToList();
@@ -281,22 +511,26 @@ public class ApiCodeGenerator
             Console.WriteLine($"[API] Generated: {filePath}");
         }
     }
-    private static string GetReturnType(Dictionary<string, TypeDescriptionDto> types, ApiDescriptionDto api,HashSet<string> unwrapGenericTypes)
+
+    private static string GetReturnType(Dictionary<string, TypeDescriptionDto> types, ApiDescriptionDto api,
+        HashSet<string> unwrapGenericTypes)
     {
         string returnType;
         if (api.ReturnType?.Type != null && types.TryGetValue(api.ReturnType.Type, out var retTypeDesc))
         {
+            // 情况1：类型存在于 types 字典中，使用详细的类型描述信息
+
             // 判断是否需要解包
             if (!string.IsNullOrEmpty(retTypeDesc.Name) && unwrapGenericTypes.Contains(retTypeDesc.Name)
-                && retTypeDesc.GenericArguments != null
-                && retTypeDesc.GenericArguments.Count == 1)
+                                                        && retTypeDesc.GenericArguments != null
+                                                        && retTypeDesc.GenericArguments.Count == 1)
             {
                 var tsType = MapCSharpTypeToTs(retTypeDesc.GenericArguments[0]);
                 if (!IsTsBasicType(tsType) && !tsType.StartsWith("types."))
                     tsType = $"types.{tsType}";
                 return tsType;
             }
-            
+
             returnType = retTypeDesc.Name ?? "any";
             if (retTypeDesc.GenericArguments != null && retTypeDesc.GenericArguments.Count > 0)
             {
@@ -310,17 +544,65 @@ public class ApiCodeGenerator
                 });
                 returnType += $"<{string.Join(", ", genArgs)}>";
             }
-            
+
             returnType = $"types.{returnType}";
         }
         else
         {
+            // 情况2：类型不存在于 types 字典中，直接从类型字符串解析
+
+            // 首先尝试解包操作
+            var typeString = api.ReturnType?.Type;
+            if (!string.IsNullOrEmpty(typeString))
+            {
+                var typeInfo = ParseGenericType(typeString);
+
+                // 检查是否需要解包（基于类型名判断）
+                var baseTypeName = ExtractTypeName(typeInfo.BaseType);
+                if (!string.IsNullOrEmpty(baseTypeName) && unwrapGenericTypes.Contains(baseTypeName)
+                                                        && typeInfo.GenericArguments.Count == 1)
+                {
+                    // 解包：返回泛型参数而不是包装类型
+                    var tsType = MapCSharpTypeToTs(typeInfo.GenericArguments[0]);
+                    if (!IsTsBasicType(tsType) && !tsType.StartsWith("types."))
+                        tsType = $"types.{tsType}";
+                    return tsType;
+                }
+            }
+
+            // 常规类型映射
             returnType = MapCSharpTypeToTs(api.ReturnType?.Type);
             if (!IsTsBasicType(returnType) && !returnType.StartsWith("types."))
                 returnType = $"types.{returnType}";
         }
 
         return returnType;
+    }
+
+    /// <summary>
+    /// 从完整类型名中提取类型名（用于解包判断）
+    /// </summary>
+    private static string ExtractTypeName(string fullTypeName)
+    {
+        if (string.IsNullOrEmpty(fullTypeName)) return "";
+
+        // 对于 VividCMS 类型，提取最后的类型名
+        if (fullTypeName.StartsWith("VividCMS."))
+        {
+            return ExtractVividCmsTypeName(fullTypeName);
+        }
+
+        // 对于其他类型，取最后一部分
+        var parts = fullTypeName.Split('.');
+        var typeName = parts.Last();
+
+        // 处理嵌套类型
+        if (typeName.Contains("+"))
+        {
+            typeName = typeName.Split('+').Last();
+        }
+
+        return typeName;
     }
 
     /// <summary>

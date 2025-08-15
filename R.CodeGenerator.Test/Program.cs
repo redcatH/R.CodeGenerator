@@ -29,11 +29,11 @@ public class Program
             // 默认配置
             config = new ApiGenConfig
             {
-                OutputDir = "soybean-admin\\src\\service\\business_api",
-                TypesDir = "soybean-admin\\src\\service\\types",
-                ImportLine = ["import { request as requestHttp } from '../request';"],
+                OutputDir = "vue-vben-admin\\apps\\web-ele\\src\\api\\business_api",
+                TypesDir = "vue-vben-admin\\apps\\web-ele\\src\\api\\types",
+                ImportLine = [""],
                 NamespacePrefix    = "VividCMS",
-                UnwrapGenericTypes = ["ApiResult"]
+                UnwrapGenericTypes = ["VbenResult"]
             };
         }
 

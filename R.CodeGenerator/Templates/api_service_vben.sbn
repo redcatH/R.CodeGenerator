@@ -1,0 +1,100 @@
+import { requestClient } from '#/api/request';
+
+{{~ for $import in import_lines ~}}
+{{ $import }}
+{{~ end ~}}
+
+const {{ service_name }} = {
+{{~ for api in apis ~}}
+{{~ if api.has_comment ~}}
+  /**
+{{~ if api.summary ~}}
+   * {{ api.summary | string.replace "*/" "*​/" | string.replace "/*" "/​*" }}
+{{~ end ~}}
+{{~ if api.remarks ~}}
+{{~ if api.summary ~}}
+   *
+{{~ end ~}}
+   * {{ api.remarks | string.replace "*/" "*​/" | string.replace "/*" "/​*" }}
+{{~ end ~}}
+{{~ for param in api.parameters ~}}
+{{~ if param.has_comment ~}}
+   * @param {{ param.name }} {{ param.summary | string.replace "*/" "*​/" | string.replace "/*" "/​*" }}
+{{~ end ~}}
+{{~ end ~}}
+{{~ if api.return_comment ~}}
+   * @returns {{ api.return_comment | string.replace "*/" "*​/" | string.replace "/*" "/​*" }}
+{{~ end ~}}
+   */
+{{~ end ~}}
+  async {{ api.action_name }}(
+{{~ for param in api.parameters ~}}
+    {{ param.name }}: {{ param.type }},
+{{~ end ~}}
+  ) {
+{{~ if api.http_method | string.downcase == "get" ~}}
+{{~ if api.parameters && api.parameters.size > 0 ~}}
+    return requestClient.get<{{ api.return_type }}>('{{ api.path }}', {
+      params: {
+{{~ for param in api.parameters ~}}
+        {{ param.name }},
+{{~ end ~}}
+      },
+    });
+{{~ else ~}}
+    return requestClient.get<{{ api.return_type }}>('{{ api.path }}');
+{{~ end ~}}
+{{~ else if api.http_method | string.downcase == "post" ~}}
+{{~ if api.parameters && api.parameters.size > 0 ~}}
+    return requestClient.post<{{ api.return_type }}>('{{ api.path }}', {
+{{~ for param in api.parameters ~}}
+      {{ param.name }},
+{{~ end ~}}
+    });
+{{~ else ~}}
+    return requestClient.post<{{ api.return_type }}>('{{ api.path }}');
+{{~ end ~}}
+{{~ else if api.http_method | string.downcase == "put" ~}}
+{{~ if api.parameters && api.parameters.size > 0 ~}}
+    return requestClient.put<{{ api.return_type }}>('{{ api.path }}', {
+{{~ for param in api.parameters ~}}
+      {{ param.name }},
+{{~ end ~}}
+    });
+{{~ else ~}}
+    return requestClient.put<{{ api.return_type }}>('{{ api.path }}');
+{{~ end ~}}
+{{~ else if api.http_method | string.downcase == "delete" ~}}
+{{~ if api.parameters && api.parameters.size > 0 ~}}
+    return requestClient.delete<{{ api.return_type }}>('{{ api.path }}', {
+      params: {
+{{~ for param in api.parameters ~}}
+        {{ param.name }},
+{{~ end ~}}
+      },
+    });
+{{~ else ~}}
+    return requestClient.delete<{{ api.return_type }}>('{{ api.path }}');
+{{~ end ~}}
+{{~ else if api.http_method | string.downcase == "patch" ~}}
+{{~ if api.parameters && api.parameters.size > 0 ~}}
+    return requestClient.patch<{{ api.return_type }}>('{{ api.path }}', {
+{{~ for param in api.parameters ~}}
+      {{ param.name }},
+{{~ end ~}}
+    });
+{{~ else ~}}
+    return requestClient.patch<{{ api.return_type }}>('{{ api.path }}');
+{{~ end ~}}
+{{~ else ~}}
+    return requestClient.request<{{ api.return_type }}>({
+      url: '{{ api.path }}',
+      method: '{{ api.http_method | string.downcase }}',
+      {{ api.data_line }}
+    });
+{{~ end ~}}
+  },
+{{~ end ~}}
+};
+
+export default {{ service_name }};
