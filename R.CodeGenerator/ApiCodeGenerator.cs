@@ -604,12 +604,15 @@ public class ApiCodeGenerator
                 {
                     var tsType = MapCSharpTypeToTs(p.Type);
                     var typedTsType = AddTypesPrefix(tsType, types);
+                    var isComplexType = IsComplexType(p.Type, types);
+                    
                     return new
                     {
                         name = p.Name,
                         type = typedTsType,
                         source = p.Source, // 添加参数来源信息
                         optional = p.IsOptional,
+                        is_complex_type = isComplexType, // 添加是否为复杂类型的判断
                         param_string = $"{p.Name}{(p.IsOptional ? "?" : "")}: {typedTsType}",
                         summary = SanitizeComment(p.Summary), // 清理参数注释
                         has_comment = !string.IsNullOrEmpty(SanitizeComment(p.Summary))
@@ -927,5 +930,59 @@ public class ApiCodeGenerator
         {
             Console.WriteLine("命令已在后台启动，不等待完成。");
         }
+    }
+
+    /// <summary>
+    /// 判断类型是否为复杂类型（自定义类型，非基础类型）
+    /// </summary>
+    /// <param name="typeFullName">类型的完整名称</param>
+    /// <param name="types">类型字典</param>
+    /// <returns>是否为复杂类型</returns>
+    private static bool IsComplexType(string? typeFullName, Dictionary<string, TypeDescriptionDto> types)
+    {
+        if (string.IsNullOrEmpty(typeFullName))
+            return false;
+
+        // 基础类型列表
+        var basicTypes = new HashSet<string>
+        {
+            "System.String", "System.Int32", "System.Int64", "System.Int16",
+            "System.Double", "System.Single", "System.Decimal", "System.Boolean",
+            "System.DateTime", "System.DateTimeOffset", "System.Guid",
+            "System.Object", "string", "number", "boolean", "any"
+        };
+
+        // 如果是基础类型，返回 false
+        if (basicTypes.Contains(typeFullName))
+            return false;
+
+        // 如果是数组类型，检查元素类型
+        if (typeFullName.EndsWith("[]"))
+        {
+            var elementType = typeFullName.Substring(0, typeFullName.Length - 2);
+            return IsComplexType(elementType, types);
+        }
+
+        // 如果是可空类型（System.Nullable<T>），检查内部类型
+        if (typeFullName.StartsWith("System.Nullable<") && typeFullName.EndsWith(">"))
+        {
+            var innerType = typeFullName.Substring(16, typeFullName.Length - 17);
+            return IsComplexType(innerType, types);
+        }
+
+        // 如果是泛型类型，简单判断为复杂类型
+        if (typeFullName.Contains("<") && typeFullName.Contains(">"))
+            return true;
+
+        // 检查是否在自定义类型字典中
+        var typeName = ExtractTypeName(typeFullName);
+        if (types.ContainsKey(typeName))
+            return true;
+
+        // 检查是否是项目自定义类型（通常有特定的命名空间前缀）
+        if (typeFullName.Contains(".") && !typeFullName.StartsWith("System."))
+            return true;
+
+        return false;
     }
 }

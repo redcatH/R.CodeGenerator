@@ -70,15 +70,34 @@ const {{ service_name }} = {
   # 收集Body和Query参数
   has_body_params = false
   has_query_params = false
+  body_params_count = 0
+  single_body_param = null
   for param in api.parameters
     if param.source == "Body"
       has_body_params = true
+      body_params_count = body_params_count + 1
+      single_body_param = param
     else if param.source == "Query"
       has_query_params = true
     end
   end
+  
+  # 判断是否需要解构Body参数
+  # 如果只有一个Body参数且是复杂类型，则解构
+  should_spread_body = body_params_count == 1 && single_body_param && single_body_param.is_complex_type
 ~}}
 {{~ if has_body_params ~}}
+{{~ if should_spread_body ~}}
+    return requestClient.post<{{ api.return_type }}>(`{{ final_url }}`, {{single_body_param.name}}{{~ if has_query_params ~}}, {
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+    }{{~ end ~}});
+{{~ else ~}}
     return requestClient.post<{{ api.return_type }}>(`{{ final_url }}`, {
 {{~ for param in api.parameters ~}}
 {{~ if param.source == "Body" ~}}
@@ -94,6 +113,7 @@ const {{ service_name }} = {
 {{~ end ~}}
       },
     }{{~ end ~}});
+{{~ end ~}}
 {{~ else if has_query_params ~}}
     return requestClient.post<{{ api.return_type }}>(`{{ final_url }}`, null, {
       params: {
@@ -112,15 +132,33 @@ const {{ service_name }} = {
   # 收集Body和Query参数
   has_body_params = false
   has_query_params = false
+  body_params_count = 0
+  single_body_param = null
   for param in api.parameters
     if param.source == "Body"
       has_body_params = true
+      body_params_count = body_params_count + 1
+      single_body_param = param
     else if param.source == "Query"
       has_query_params = true
     end
   end
+  
+  # 判断是否需要解构Body参数
+  should_spread_body = body_params_count == 1 && single_body_param && single_body_param.is_complex_type
 ~}}
 {{~ if has_body_params ~}}
+{{~ if should_spread_body ~}}
+    return requestClient.put<{{ api.return_type }}>(`{{ final_url }}`, {{single_body_param.name}}{{~ if has_query_params ~}}, {
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+    }{{~ end ~}});
+{{~ else ~}}
     return requestClient.put<{{ api.return_type }}>(`{{ final_url }}`, {
 {{~ for param in api.parameters ~}}
 {{~ if param.source == "Body" ~}}
@@ -136,6 +174,7 @@ const {{ service_name }} = {
 {{~ end ~}}
       },
     }{{~ end ~}});
+{{~ end ~}}
 {{~ else if has_query_params ~}}
     return requestClient.put<{{ api.return_type }}>(`{{ final_url }}`, null, {
       params: {
@@ -178,15 +217,33 @@ const {{ service_name }} = {
   # 收集Body和Query参数
   has_body_params = false
   has_query_params = false
+  body_params_count = 0
+  single_body_param = null
   for param in api.parameters
     if param.source == "Body"
       has_body_params = true
+      body_params_count = body_params_count + 1
+      single_body_param = param
     else if param.source == "Query"
       has_query_params = true
     end
   end
+  
+  # 判断是否需要解构Body参数
+  should_spread_body = body_params_count == 1 && single_body_param && single_body_param.is_complex_type
 ~}}
 {{~ if has_body_params ~}}
+{{~ if should_spread_body ~}}
+    return requestClient.patch<{{ api.return_type }}>(`{{ final_url }}`, {{single_body_param.name}}{{~ if has_query_params ~}}, {
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+    }{{~ end ~}});
+{{~ else ~}}
     return requestClient.patch<{{ api.return_type }}>(`{{ final_url }}`, {
 {{~ for param in api.parameters ~}}
 {{~ if param.source == "Body" ~}}
@@ -202,6 +259,7 @@ const {{ service_name }} = {
 {{~ end ~}}
       },
     }{{~ end ~}});
+{{~ end ~}}
 {{~ else if has_query_params ~}}
     return requestClient.patch<{{ api.return_type }}>(`{{ final_url }}`, null, {
       params: {
@@ -220,18 +278,28 @@ const {{ service_name }} = {
   # 其他HTTP方法的通用处理
   has_body_params = false
   has_query_params = false
+  body_params_count = 0
+  single_body_param = null
   for param in api.parameters
     if param.source == "Body"
       has_body_params = true
+      body_params_count = body_params_count + 1
+      single_body_param = param
     else if param.source == "Query"
       has_query_params = true
     end
   end
+  
+  # 判断是否需要解构Body参数
+  should_spread_body = body_params_count == 1 && single_body_param && single_body_param.is_complex_type
 ~}}
     return requestClient.request<{{ api.return_type }}>({
       url: `{{ final_url }}`,
       method: '{{ api.http_method | string.downcase }}',
 {{~ if has_body_params ~}}
+{{~ if should_spread_body ~}}
+      data: {{single_body_param.name}},
+{{~ else ~}}
       data: {
 {{~ for param in api.parameters ~}}
 {{~ if param.source == "Body" ~}}
@@ -239,6 +307,7 @@ const {{ service_name }} = {
 {{~ end ~}}
 {{~ end ~}}
       },
+{{~ end ~}}
 {{~ end ~}}
 {{~ if has_query_params ~}}
       params: {
