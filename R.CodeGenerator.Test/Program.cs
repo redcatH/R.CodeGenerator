@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Diagnostics;
 using System.Text.Json;
 using R.DescriptionModelGenerator;
 
@@ -33,7 +34,9 @@ public class Program
                 TypesDir = "vue-vben-admin\\apps\\web-ele\\src\\api\\types",
                 ImportLine = [""],
                 NamespacePrefix    = "VividCMS",
-                UnwrapGenericTypes = ["VbenResult"]
+                UnwrapGenericTypes = ["VbenResult"],
+                TemplatePath = "Templates/api_service_vben.sbn",
+                EnablePostGenerationCommand = false // 默认不执行后置命令
             };
         }
 
@@ -65,13 +68,17 @@ public class Program
             throw new Exception("swagger.json 解析失败");
         Console.WriteLine("swagger 数据解析成功。");
 
-        var generator = new ApiCodeGenerator();
+        var generator = new ApiCodeGenerator(config);
         Console.WriteLine("开始生成类型定义...");
         generator.GenerateTypes(model.Types, config.TypesDir, config.UseInterface,config.NamespacePrefix);
         Console.WriteLine("类型定义生成完成。");
         Console.WriteLine("开始生成 API 代码...");
         generator.GenerateApis(model.Apis, config.OutputDir, config.ImportLine,model.Types,config.UnwrapGenericTypes);
         Console.WriteLine("API 代码生成完成。");
+        
+        // 执行后置命令
+        generator.ExecutePostGenerationCommand();
+        
         Console.WriteLine("全部流程执行完毕。");
     }
 }

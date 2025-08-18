@@ -32,65 +32,223 @@ const {{ service_name }} = {
     {{ param.name }}: {{ param.type }},
 {{~ end ~}}
   ) {
+{{~ 
+  # 构建URL，将路径参数插入
+  final_url = api.path
+  for param in api.parameters
+    if param.source == "Path"
+      final_url = final_url | string.replace "{" + param.name + "}" "${" + param.name + "}"
+    end
+  end
+~}}
 {{~ if api.http_method | string.downcase == "get" ~}}
-{{~ if api.parameters && api.parameters.size > 0 ~}}
-    return requestClient.get<{{ api.return_type }}>('{{ api.path }}', {
+{{~ 
+  # 收集查询参数
+  has_query_params = false
+  for param in api.parameters
+    if param.source == "Query"
+      has_query_params = true
+      break
+    end
+  end
+~}}
+{{~ if has_query_params ~}}
+    return requestClient.get<{{ api.return_type }}>(`{{ final_url }}`, {
       params: {
 {{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
         {{ param.name }},
+{{~ end ~}}
 {{~ end ~}}
       },
     });
 {{~ else ~}}
-    return requestClient.get<{{ api.return_type }}>('{{ api.path }}');
+    return requestClient.get<{{ api.return_type }}>(`{{ final_url }}`);
 {{~ end ~}}
 {{~ else if api.http_method | string.downcase == "post" ~}}
-{{~ if api.parameters && api.parameters.size > 0 ~}}
-    return requestClient.post<{{ api.return_type }}>('{{ api.path }}', {
+{{~ 
+  # 收集Body和Query参数
+  has_body_params = false
+  has_query_params = false
+  for param in api.parameters
+    if param.source == "Body"
+      has_body_params = true
+    else if param.source == "Query"
+      has_query_params = true
+    end
+  end
+~}}
+{{~ if has_body_params ~}}
+    return requestClient.post<{{ api.return_type }}>(`{{ final_url }}`, {
 {{~ for param in api.parameters ~}}
+{{~ if param.source == "Body" ~}}
       {{ param.name }},
 {{~ end ~}}
-    });
-{{~ else ~}}
-    return requestClient.post<{{ api.return_type }}>('{{ api.path }}');
 {{~ end ~}}
-{{~ else if api.http_method | string.downcase == "put" ~}}
-{{~ if api.parameters && api.parameters.size > 0 ~}}
-    return requestClient.put<{{ api.return_type }}>('{{ api.path }}', {
-{{~ for param in api.parameters ~}}
-      {{ param.name }},
-{{~ end ~}}
-    });
-{{~ else ~}}
-    return requestClient.put<{{ api.return_type }}>('{{ api.path }}');
-{{~ end ~}}
-{{~ else if api.http_method | string.downcase == "delete" ~}}
-{{~ if api.parameters && api.parameters.size > 0 ~}}
-    return requestClient.delete<{{ api.return_type }}>('{{ api.path }}', {
+    }{{~ if has_query_params ~}}, {
       params: {
 {{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
         {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+    }{{~ end ~}});
+{{~ else if has_query_params ~}}
+    return requestClient.post<{{ api.return_type }}>(`{{ final_url }}`, null, {
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
 {{~ end ~}}
       },
     });
 {{~ else ~}}
-    return requestClient.delete<{{ api.return_type }}>('{{ api.path }}');
+    return requestClient.post<{{ api.return_type }}>(`{{ final_url }}`);
 {{~ end ~}}
-{{~ else if api.http_method | string.downcase == "patch" ~}}
-{{~ if api.parameters && api.parameters.size > 0 ~}}
-    return requestClient.patch<{{ api.return_type }}>('{{ api.path }}', {
+{{~ else if api.http_method | string.downcase == "put" ~}}
+{{~ 
+  # 收集Body和Query参数
+  has_body_params = false
+  has_query_params = false
+  for param in api.parameters
+    if param.source == "Body"
+      has_body_params = true
+    else if param.source == "Query"
+      has_query_params = true
+    end
+  end
+~}}
+{{~ if has_body_params ~}}
+    return requestClient.put<{{ api.return_type }}>(`{{ final_url }}`, {
 {{~ for param in api.parameters ~}}
+{{~ if param.source == "Body" ~}}
       {{ param.name }},
 {{~ end ~}}
+{{~ end ~}}
+    }{{~ if has_query_params ~}}, {
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+    }{{~ end ~}});
+{{~ else if has_query_params ~}}
+    return requestClient.put<{{ api.return_type }}>(`{{ final_url }}`, null, {
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
     });
 {{~ else ~}}
-    return requestClient.patch<{{ api.return_type }}>('{{ api.path }}');
+    return requestClient.put<{{ api.return_type }}>(`{{ final_url }}`);
+{{~ end ~}}
+{{~ else if api.http_method | string.downcase == "delete" ~}}
+{{~ 
+  # 收集查询参数
+  has_query_params = false
+  for param in api.parameters
+    if param.source == "Query"
+      has_query_params = true
+      break
+    end
+  end
+~}}
+{{~ if has_query_params ~}}
+    return requestClient.delete<{{ api.return_type }}>(`{{ final_url }}`, {
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+    });
+{{~ else ~}}
+    return requestClient.delete<{{ api.return_type }}>(`{{ final_url }}`);
+{{~ end ~}}
+{{~ else if api.http_method | string.downcase == "patch" ~}}
+{{~ 
+  # 收集Body和Query参数
+  has_body_params = false
+  has_query_params = false
+  for param in api.parameters
+    if param.source == "Body"
+      has_body_params = true
+    else if param.source == "Query"
+      has_query_params = true
+    end
+  end
+~}}
+{{~ if has_body_params ~}}
+    return requestClient.patch<{{ api.return_type }}>(`{{ final_url }}`, {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Body" ~}}
+      {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+    }{{~ if has_query_params ~}}, {
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+    }{{~ end ~}});
+{{~ else if has_query_params ~}}
+    return requestClient.patch<{{ api.return_type }}>(`{{ final_url }}`, null, {
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+    });
+{{~ else ~}}
+    return requestClient.patch<{{ api.return_type }}>(`{{ final_url }}`);
 {{~ end ~}}
 {{~ else ~}}
+{{~ 
+  # 其他HTTP方法的通用处理
+  has_body_params = false
+  has_query_params = false
+  for param in api.parameters
+    if param.source == "Body"
+      has_body_params = true
+    else if param.source == "Query"
+      has_query_params = true
+    end
+  end
+~}}
     return requestClient.request<{{ api.return_type }}>({
-      url: '{{ api.path }}',
+      url: `{{ final_url }}`,
       method: '{{ api.http_method | string.downcase }}',
-      {{ api.data_line }}
+{{~ if has_body_params ~}}
+      data: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Body" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+{{~ end ~}}
+{{~ if has_query_params ~}}
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+{{~ end ~}}
     });
 {{~ end ~}}
   },

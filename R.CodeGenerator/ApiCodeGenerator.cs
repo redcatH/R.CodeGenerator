@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using R.DescriptionModelGenerator;
 using Scriban;
@@ -11,6 +12,25 @@ public class ApiCodeGenerator
     public ApiCodeGenerator(ApiGeneratorConfig? config = null)
     {
         _config = config ?? new ApiGeneratorConfig();
+    }
+    
+    /// <summary>
+    /// 从 ApiGenConfig 创建 ApiCodeGenerator
+    /// </summary>
+    /// <param name="genConfig">外部配置</param>
+    public ApiCodeGenerator(ApiGenConfig genConfig)
+    {
+        _config = new ApiGeneratorConfig
+        {
+            TemplatePath = genConfig.TemplatePath,
+            EnablePostGenerationCommand = genConfig.EnablePostGenerationCommand,
+            CommandWorkingDirectory = genConfig.CommandWorkingDirectory,
+            Command = genConfig.Command,
+            CommandArguments = genConfig.CommandArguments,
+            CommandTimeoutMs = genConfig.CommandTimeoutMs,
+            WaitForCommandCompletion = genConfig.WaitForCommandCompletion,
+            UnwrapGenericTypes = genConfig.UnwrapGenericTypes?.ToHashSet() ?? new HashSet<string>()
+        };
     }
 
     public static string MapCSharpTypeToTs(string? csharpType)
@@ -588,6 +608,7 @@ public class ApiCodeGenerator
                     {
                         name = p.Name,
                         type = typedTsType,
+                        source = p.Source, // 添加参数来源信息
                         optional = p.IsOptional,
                         param_string = $"{p.Name}{(p.IsOptional ? "?" : "")}: {typedTsType}",
                         summary = SanitizeComment(p.Summary), // 清理参数注释
@@ -765,5 +786,146 @@ public class ApiCodeGenerator
         if (!string.IsNullOrEmpty(act) && char.IsUpper(act[0]))
             act = char.ToLower(act[0]) + act.Substring(1);
         return act;
+    }
+    
+    /// <summary>
+    /// 执行后置命令
+    /// </summary>
+    public void ExecutePostGenerationCommand()
+    {
+        if (!_config.EnablePostGenerationCommand || string.IsNullOrWhiteSpace(_config.Command))
+        {
+            return;
+        }
+        
+        Console.WriteLine("开始执行后置命令...");
+        try
+        {
+            ExecuteCommand();
+            Console.WriteLine("后置命令执行完成。");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"后置命令执行失败: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// 执行配置中指定的命令
+    /// </summary>
+    private void ExecuteCommand()
+    {
+        if (string.IsNullOrWhiteSpace(_config.Command))
+        {
+            Console.WriteLine("未配置命令，跳过执行。");
+            return;
+        }
+        
+        var processInfo = new ProcessStartInfo();
+        
+        // 设置工作目录
+        if (!string.IsNullOrWhiteSpace(_config.CommandWorkingDirectory))
+        {
+            var workingDir = Path.IsPathRooted(_config.CommandWorkingDirectory) 
+                ? _config.CommandWorkingDirectory 
+                : Path.GetFullPath(_config.CommandWorkingDirectory);
+                
+            if (Directory.Exists(workingDir))
+            {
+                processInfo.WorkingDirectory = workingDir;
+                Console.WriteLine($"命令工作目录: {workingDir}");
+            }
+            else
+            {
+                Console.WriteLine($"警告: 指定的工作目录不存在: {workingDir}，使用当前目录");
+            }
+        }
+        
+        // 根据操作系统设置命令执行方式
+        if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+        {
+            processInfo.FileName = "cmd.exe";
+            // 构建完整的命令字符串
+            var fullCommand = _config.Command;
+            if (!string.IsNullOrWhiteSpace(_config.CommandArguments))
+            {
+                fullCommand += $" {_config.CommandArguments}";
+            }
+            processInfo.Arguments = $"/c {fullCommand}";
+        }
+        else
+        {
+            processInfo.FileName = "/bin/bash";
+            // 构建完整的命令字符串
+            var fullCommand = _config.Command;
+            if (!string.IsNullOrWhiteSpace(_config.CommandArguments))
+            {
+                fullCommand += $" {_config.CommandArguments}";
+            }
+            processInfo.Arguments = $"-c \"{fullCommand}\"";
+        }
+        
+        processInfo.RedirectStandardOutput = true;
+        processInfo.RedirectStandardError = true;
+        processInfo.UseShellExecute = false;
+        processInfo.CreateNoWindow = true;
+        
+        Console.WriteLine($"执行命令: {processInfo.FileName} {processInfo.Arguments}");
+        
+        using var process = Process.Start(processInfo);
+        if (process == null)
+        {
+            throw new Exception("无法启动进程");
+        }
+        
+        if (_config.WaitForCommandCompletion)
+        {
+            // 异步读取输出和错误流
+            var outputTask = process.StandardOutput.ReadToEndAsync();
+            var errorTask = process.StandardError.ReadToEndAsync();
+            
+            // 等待进程完成
+            bool hasExited;
+            if (_config.CommandTimeoutMs > 0)
+            {
+                hasExited = process.WaitForExit(_config.CommandTimeoutMs);
+            }
+            else
+            {
+                process.WaitForExit();
+                hasExited = true;
+            }
+            
+            if (!hasExited)
+            {
+                process.Kill();
+                throw new Exception($"命令执行超时 ({_config.CommandTimeoutMs}ms)");
+            }
+            
+            // 获取输出
+            var output = outputTask.Result;
+            var error = errorTask.Result;
+            
+            if (!string.IsNullOrWhiteSpace(output))
+            {
+                Console.WriteLine("命令输出:");
+                Console.WriteLine(output);
+            }
+            
+            if (!string.IsNullOrWhiteSpace(error))
+            {
+                Console.WriteLine("命令错误信息:");
+                Console.WriteLine(error);
+            }
+            
+            if (process.ExitCode != 0)
+            {
+                throw new Exception($"命令执行失败，退出代码: {process.ExitCode}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("命令已在后台启动，不等待完成。");
+        }
     }
 }

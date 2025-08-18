@@ -1,0 +1,15 @@
+{
+  "OutputDir": "D:\\git\\work\\zhizikeji\\GB28181\\VividCMS\\gb28181-vben-frontend\\apps\\web-ele\\src\\api\\business_api",
+  "TypesDir": "D:\\git\\work\\zhizikeji\\GB28181\\VividCMS\\gb28181-vben-frontend\\apps\\web-ele\\src\\api\\\\types",
+  "ImportLine": [""],
+  "NamespacePrefix": "VividCMS",
+  "UnwrapGenericTypes": ["VbenResult"],
+  "UseInterface": true,
+  "TemplatePath": "Templates/api_service_vben.sbn",
+  "EnablePostGenerationCommand": true,
+  "CommandWorkingDirectory": "D:\\git\\work\\zhizikeji\\GB28181\\VividCMS\\gb28181-vben-frontend\\apps\\web-ele",
+  "Command": "pnpm fix:path \"src/api/**/*.ts\"",
+  "CommandArguments": "",
+  "CommandTimeoutMs": 60000,
+  "WaitForCommandCompletion": true
+}

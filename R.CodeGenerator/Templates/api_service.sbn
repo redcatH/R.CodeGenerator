@@ -1,5 +1,5 @@
-{{~ for $import in import_lines ~}}
-{{ $import }}
+{{~ for import in import_lines ~}}
+{{ import }}
 {{~ end ~}}
 
 const {{ service_name }} = {
