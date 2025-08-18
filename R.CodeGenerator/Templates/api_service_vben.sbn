@@ -83,7 +83,8 @@ const {{ service_name }} = {
   end
   
   # 判断是否需要解构Body参数
-  # 如果只有一个Body参数且是复杂类型，则解构
+  # 如果只有一个Body参数且是复杂类型，则直接传递（常见情况）
+  # 如果有多个Body参数，则包装在对象中（罕见情况，通常不推荐）
   should_spread_body = body_params_count == 1 && single_body_param && single_body_param.is_complex_type
 ~}}
 {{~ if has_body_params ~}}
@@ -190,16 +191,53 @@ const {{ service_name }} = {
 {{~ end ~}}
 {{~ else if api.http_method | string.downcase == "delete" ~}}
 {{~ 
-  # 收集查询参数
+  # 收集Body和Query参数
+  has_body_params = false
   has_query_params = false
+  body_params_count = 0
+  single_body_param = null
   for param in api.parameters
-    if param.source == "Query"
+    if param.source == "Body"
+      has_body_params = true
+      body_params_count = body_params_count + 1
+      single_body_param = param
+    else if param.source == "Query"
       has_query_params = true
-      break
     end
   end
+  
+  # 判断是否需要解构Body参数
+  should_spread_body = body_params_count == 1 && single_body_param && single_body_param.is_complex_type
 ~}}
-{{~ if has_query_params ~}}
+{{~ if has_body_params ~}}
+{{~ if should_spread_body ~}}
+    return requestClient.delete<{{ api.return_type }}>(`{{ final_url }}`, {{single_body_param.name}}{{~ if has_query_params ~}}, {
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+    }{{~ end ~}});
+{{~ else ~}}
+    return requestClient.delete<{{ api.return_type }}>(`{{ final_url }}`, {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Body" ~}}
+      {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+    }{{~ if has_query_params ~}}, {
+      params: {
+{{~ for param in api.parameters ~}}
+{{~ if param.source == "Query" ~}}
+        {{ param.name }},
+{{~ end ~}}
+{{~ end ~}}
+      },
+    }{{~ end ~}});
+{{~ end ~}}
+{{~ else if has_query_params ~}}
     return requestClient.delete<{{ api.return_type }}>(`{{ final_url }}`, {
       params: {
 {{~ for param in api.parameters ~}}
