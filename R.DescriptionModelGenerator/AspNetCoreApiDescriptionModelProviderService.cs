@@ -313,13 +313,29 @@ public class AspNetCoreApiDescriptionModelProviderService
                     // 查找参数注释
                     paramComments.TryGetValue(p.Name, out var paramSummary);
                     
+                    // 获取默认值 - 优先从 ParameterInfo 获取，其次从 RouteInfo 获取
+                    object? defaultValue = null;
+                    if (p.ParameterDescriptor is ControllerParameterDescriptor controllerParam)
+                    {
+                        var paramInfo = controllerParam.ParameterInfo;
+                        if (paramInfo != null && paramInfo.HasDefaultValue)
+                        {
+                            defaultValue = paramInfo.DefaultValue;
+                        }
+                    }
+                    // 如果从 ParameterInfo 没获取到，尝试从 RouteInfo 获取
+                    if (defaultValue == null)
+                    {
+                        defaultValue = p.RouteInfo?.DefaultValue;
+                    }
+                    
                     return new ApiParameterDescriptionDto
                     {
                         Name = p.Name,
                         Type = p.Type.FullName?.Replace('+', '.'),
                         Source = p.Source.Id,
                         IsOptional = isOptional,
-                        DefaultValue = p.RouteInfo?.DefaultValue,
+                        DefaultValue = defaultValue,
                         Summary = paramSummary
                     };
                 }).ToList();
@@ -455,24 +471,36 @@ public class AspNetCoreApiDescriptionModelProviderService
     {
         var isOptional = false;
         var paramType = p.Type;
+        
+        // 1. 检查路由是否可选
         if (p.RouteInfo?.IsOptional == true)
         {
             isOptional = true;
         }
-        else
+        // 2. 检查是否是 Nullable<T> (值类型的可空版本)
+        else if (Nullable.GetUnderlyingType(paramType) != null)
         {
-            if (Nullable.GetUnderlyingType(paramType) != null)
+            isOptional = true;
+        }
+        // 3. 检查是否有默认值
+        else if (p.RouteInfo?.DefaultValue != null)
+        {
+            isOptional = true;
+        }
+        // 4. 对于引用类型，检查可空性
+        else if (!paramType.IsValueType)
+        {
+            // 引用类型，查NullableAttribute（通过ControllerParameterDescriptor.ParameterInfo）
+            var controllerParam = p.ParameterDescriptor as ControllerParameterDescriptor;
+            var paramInfo = controllerParam?.ParameterInfo;
+            if (paramInfo != null)
             {
-                isOptional = true;
-            }
-            else if (!paramType.IsValueType)
-            {
-                // 引用类型，查NullableAttribute（通过ControllerParameterDescriptor.ParameterInfo）
-                var controllerParam =
-                    p.ParameterDescriptor as
-                        ControllerParameterDescriptor;
-                var paramInfo = controllerParam?.ParameterInfo;
-                if (paramInfo != null)
+                // 检查参数是否有默认值
+                if (paramInfo.HasDefaultValue)
+                {
+                    isOptional = true;
+                }
+                else
                 {
                     var nullableAttr = paramInfo.GetCustomAttributes(false).FirstOrDefault(a =>
                         a.GetType().FullName == "System.Runtime.CompilerServices.NullableAttribute");
@@ -487,16 +515,12 @@ public class AspNetCoreApiDescriptionModelProviderService
                                 isOptional = true;
                         }
                     }
-                    else
-                    {
-                        // 默认引用类型可空
-                        isOptional = false;
-                    }
+                    // 注意：这里不再默认设置为 false，而是保持原值
                 }
-                else
-                {
-                    isOptional = true;
-                }
+            }
+            else
+            {
+                isOptional = true;
             }
         }
 

@@ -29,7 +29,30 @@ const {{ service_name }} = {
 {{~ end ~}}
   async {{ api.action_name }}(
 {{~ for param in api.parameters ~}}
-    {{ param.name }}: {{ param.type }},
+{{~ 
+  # 处理参数类型的逻辑
+  param_type = param.type
+  is_already_nullable = (param_type | string.contains "null") || (param_type | string.contains "undefined")
+  has_default_value = param.defaultValue != null
+  
+  # 确定最终的类型表示
+  if param.isOptional
+    if has_default_value && param.defaultValue == null
+      # 有默认值且默认值是null，使用可选参数，不额外添加null
+      final_type = param_type
+    else if !is_already_nullable
+      # 可选但类型中没有null，添加null联合类型
+      final_type = param_type + " | null"
+    else
+      # 类型中已经包含null
+      final_type = param_type
+    end
+  else
+    # 非可选参数，直接使用原类型
+    final_type = param_type
+  end
+~}}
+    {{ param.name }}{{~ if param.isOptional ~}}?{{~ end ~}}: {{ final_type }},
 {{~ end ~}}
   ) {
 {{~ 

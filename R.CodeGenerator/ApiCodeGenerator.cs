@@ -611,13 +611,17 @@ public class ApiCodeGenerator
                         name = p.Name,
                         type = typedTsType,
                         source = p.Source, // 添加参数来源信息
-                        optional = p.IsOptional,
+                        isOptional = p.IsOptional, // 修改为正确的属性名
+                        defaultValue = p.DefaultValue, // 添加默认值
                         is_complex_type = isComplexType, // 添加是否为复杂类型的判断
                         param_string = $"{p.Name}{(p.IsOptional ? "?" : "")}: {typedTsType}",
                         summary = SanitizeComment(p.Summary), // 清理参数注释
                         has_comment = !string.IsNullOrEmpty(SanitizeComment(p.Summary))
                     };
-                }).ToList();
+                })
+                // 重要：必需参数必须在可选参数之前，按 isOptional 排序
+                .OrderBy(p => p.isOptional)
+                .ToList();
 
                 var result = new
                 {
