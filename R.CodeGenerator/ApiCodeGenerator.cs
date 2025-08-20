@@ -174,6 +174,8 @@ public class ApiCodeGenerator
             { "System.DateTime", "string" },
             { "System.DateTimeOffset", "string" },
             { "System.Guid", "string" },
+            { "System.Byte[]", "File" }, // 字节数组映射为 File
+            { "byte[]", "File" }, // 简化的字节数组映射
             // 可空类型的基础映射（会被泛型处理覆盖）
             { "System.Nullable", "any" },
         };
@@ -206,6 +208,17 @@ public class ApiCodeGenerator
 
         // ASP.NET Core 类型
         if (baseType.StartsWith("Microsoft.AspNetCore.Mvc."))
+        {
+            return "any";
+        }
+
+        // ASP.NET Core Http 类型 - 文件上传
+        if (baseType == "Microsoft.AspNetCore.Http.IFormFile")
+        {
+            return "File";
+        }
+
+        if (baseType.StartsWith("Microsoft.AspNetCore.Http."))
         {
             return "any";
         }
@@ -245,6 +258,18 @@ public class ApiCodeGenerator
     private static bool IsTaskType(string type)
     {
         return type.StartsWith("System.Threading.Tasks.Task");
+    }
+
+    /// <summary>
+    /// 检查是否是文件类型
+    /// </summary>
+    private static bool IsFileType(string type)
+    {
+        return type == "Microsoft.AspNetCore.Http.IFormFile" ||
+               type.StartsWith("Microsoft.AspNetCore.Http.IFormFile") ||
+               type == "System.IO.Stream" ||
+               type == "System.Byte[]" ||
+               type == "byte[]";
     }
 
     /// <summary>
@@ -605,6 +630,7 @@ public class ApiCodeGenerator
                     var tsType = MapCSharpTypeToTs(p.Type);
                     var typedTsType = AddTypesPrefix(tsType, types);
                     var isComplexType = IsComplexType(p.Type, types);
+                    var isFileType = IsFileType(p.Type ?? "");
                     
                     return new
                     {
@@ -614,6 +640,7 @@ public class ApiCodeGenerator
                         isOptional = p.IsOptional, // 修改为正确的属性名
                         defaultValue = p.DefaultValue, // 添加默认值
                         is_complex_type = isComplexType, // 添加是否为复杂类型的判断
+                        is_file_type = isFileType, // 添加是否为文件类型的判断
                         param_string = $"{p.Name}{(p.IsOptional ? "?" : "")}: {typedTsType}",
                         summary = SanitizeComment(p.Summary), // 清理参数注释
                         has_comment = !string.IsNullOrEmpty(SanitizeComment(p.Summary))
