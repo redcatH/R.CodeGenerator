@@ -300,31 +300,33 @@ const {{ service_name }} = {
 ~}}
 {{~ if has_body_params ~}}
 {{~ if should_spread_body ~}}
-    return requestClient.delete<{{ api.return_type }}>(`{{ final_url }}`, {{single_body_param.name}}{{~ if has_query_params ~}}, {
+    return requestClient.delete<{{ api.return_type }}>(`{{ final_url }}`, {
+      data: {{single_body_param.name}},{{~ if has_query_params ~}}
       params: {
 {{~ for param in api.parameters ~}}
 {{~ if param.source == "Query" ~}}
         {{ param.name }},
 {{~ end ~}}
 {{~ end ~}}
-      },
-    }{{~ end ~}});
+      },{{~ end ~}}
+    });
 {{~ else ~}}
     return requestClient.delete<{{ api.return_type }}>(`{{ final_url }}`, {
+      data: {
 {{~ for param in api.parameters ~}}
 {{~ if param.source == "Body" ~}}
-      {{ param.name }},
+        {{ param.name }},
 {{~ end ~}}
 {{~ end ~}}
-    }{{~ if has_query_params ~}}, {
+      },{{~ if has_query_params ~}}
       params: {
 {{~ for param in api.parameters ~}}
 {{~ if param.source == "Query" ~}}
         {{ param.name }},
 {{~ end ~}}
 {{~ end ~}}
-      },
-    }{{~ end ~}});
+      },{{~ end ~}}
+    });
 {{~ end ~}}
 {{~ else if has_query_params ~}}
     return requestClient.delete<{{ api.return_type }}>(`{{ final_url }}`, {
