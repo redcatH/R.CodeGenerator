@@ -440,6 +440,10 @@ public class AspNetCoreApiDescriptionModelProviderService
     public static Type? UnwrapTask(Type? type)
     {
         if (type == null) return null;
+        if (type == typeof(Task))
+        {
+            return typeof(void);
+        }
         if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Task<>)))
         {
             return type.GetGenericArguments()[0];
