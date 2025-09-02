@@ -224,7 +224,7 @@ public class ApiCodeGenerator
         }
 
         // VividCMS 类型处理
-        if (baseType.StartsWith("VividCMS."))
+        if (baseType.StartsWith($"{_namespacePrefix}"))
         {
             return ExtractVividCmsTypeName(baseType);
         }
@@ -277,8 +277,9 @@ public class ApiCodeGenerator
     /// </summary>
     private static string ExtractVividCmsTypeName(string fullTypeName)
     {
+        var escapedPrefix = Regex.Escape(_namespacePrefix);
         // 使用正则表达式提取最后一个命名空间部分
-        var pattern = @"VividCMS\.(?:[^.]+\.)*([^.+]+(?:\+.+)?)$";
+        var pattern = @$"{escapedPrefix}(?:[^.]+\.)*([^.+]+(?:\+.+)?)$";
         var match = Regex.Match(fullTypeName, pattern);
 
         if (match.Success)
@@ -486,9 +487,11 @@ public class ApiCodeGenerator
         return lines;
     }
 
+    private static string _namespacePrefix;
     public void GenerateTypes(Dictionary<string, TypeDescriptionDto> types, string typesDir, bool useInterface,
         string namespacePrefix)
     {
+        _namespacePrefix = namespacePrefix; 
         Directory.CreateDirectory(typesDir);
         var typeNames = new List<string>();
         var generatedTypes = new HashSet<string>();
@@ -757,7 +760,7 @@ public class ApiCodeGenerator
         if (string.IsNullOrEmpty(fullTypeName)) return "";
 
         // 对于 VividCMS 类型，提取最后的类型名
-        if (fullTypeName.StartsWith("VividCMS."))
+        if (fullTypeName.StartsWith($"{_namespacePrefix}"))
         {
             return ExtractVividCmsTypeName(fullTypeName);
         }
