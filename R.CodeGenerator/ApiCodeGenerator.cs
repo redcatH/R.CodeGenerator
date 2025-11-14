@@ -518,68 +518,102 @@ public class ApiCodeGenerator
                 var lines = new List<string>();
                 // 需要 import 的类型
                 var importSet = new HashSet<string>();
-                string genericParams = type.GenericArguments != null && type.GenericArguments.Count > 0
-                    ? $"<{string.Join(", ", type.GenericArguments.Select((g, i) => $"T{i}"))}>"
-                    : "";
-                string baseClause = "";
-                if (!string.IsNullOrEmpty(type.BaseType) && types.ContainsKey(type.BaseType))
-                {
-                    var baseType = types[type.BaseType];
-                    var baseGenericParams = baseType.GenericArguments != null && baseType.GenericArguments.Count > 0
-                        ? $"<{string.Join(", ", baseType.GenericArguments.Select((g, i) => $"T{i}"))}>"
-                        : "";
-                    baseClause = $" extends {baseType.Name}{baseGenericParams}";
-                    // 只要不是全局类型就 import
-                    if (!string.IsNullOrEmpty(baseType.Name) && baseType.Name != "object" && baseType.Name != "any" &&
-                        baseType.Name != type.Name)
-                        importSet.Add(baseType.Name);
-                }
 
-                // 添加类型的 JSDoc 注释
-                var typeCommentLines = GenerateJSDocComment(type.Summary, type.Remarks);
-                lines.AddRange(typeCommentLines);
+                // 检测是否为枚举类型
+                bool isEnumType = !string.IsNullOrEmpty(type.BaseType) && type.BaseType == "System.Enum";
 
-                lines.Add(
-                    $"{(useInterface ? "export interface" : "export type")} {type.Name}{genericParams}{baseClause} {{");
-                foreach (var prop in type.Properties)
+                if (isEnumType)
                 {
-                    string? tsType = null;
-                    int idx = -1;
-                    if (type.GenericArguments != null && prop.Type != null &&
-                        (idx = type.GenericArguments.IndexOf(prop.Type)) >= 0)
+                    // 生成枚举类型
+                    // 添加类型的 JSDoc 注释
+                    var typeCommentLines = GenerateJSDocComment(type.Summary, type.Remarks);
+                    lines.AddRange(typeCommentLines);
+
+                    lines.Add($"export enum {type.Name} {{");
+                    
+                    if (type.EnumValues != null && type.EnumValues.Count > 0)
                     {
-                        tsType = $"T{idx}";
-                    }
-                    else
-                    {
-                        tsType = MapCSharpTypeToTs(prop.Type);
-                        // 提取需要 import 的类型名
-                        var importableTypes = ExtractImportableTypeNames(tsType, types);
-                        foreach (var importType in importableTypes)
+                        for (int i = 0; i < type.EnumValues.Count; i++)
                         {
-                            if (importType != type.Name) // 排除自身
-                            {
-                                importSet.Add(importType);
-                            }
+                            var enumValue = type.EnumValues[i];
+                            var enumName = enumValue.Name ?? "";
+                            var enumVal = enumValue.Value ?? "0";
+                            
+                            // 最后一个成员不加逗号
+                            var comma = i < type.EnumValues.Count - 1 ? "," : "";
+                            lines.Add($"  {enumName} = \"{enumVal}\"{comma}");
                         }
                     }
 
-                    var optional = prop.IsNullable || !prop.IsRequired ? "?" : "";
-
-                    // 添加属性的 JSDoc 注释
-                    var propCommentLines = GenerateJSDocComment(prop.Summary, prop.Remarks);
-                    if (propCommentLines.Count > 0)
+                    lines.Add("}");
+                }
+                else
+                {
+                    // 生成常规类型（class 或 interface）
+                    string genericParams = type.GenericArguments != null && type.GenericArguments.Count > 0
+                        ? $"<{string.Join(", ", type.GenericArguments.Select((g, i) => $"T{i}"))}>"
+                        : "";
+                    string baseClause = "";
+                    if (!string.IsNullOrEmpty(type.BaseType) && types.ContainsKey(type.BaseType))
                     {
-                        // 为属性注释添加缩进
-                        var indentedLines = propCommentLines.Select(line =>
-                            line == "/**" || line == " */" ? $"  {line}" : $"  {line}");
-                        lines.AddRange(indentedLines);
+                        var baseType = types[type.BaseType];
+                        var baseGenericParams = baseType.GenericArguments != null && baseType.GenericArguments.Count > 0
+                            ? $"<{string.Join(", ", baseType.GenericArguments.Select((g, i) => $"T{i}"))}>"
+                            : "";
+                        baseClause = $" extends {baseType.Name}{baseGenericParams}";
+                        // 只要不是全局类型就 import
+                        if (!string.IsNullOrEmpty(baseType.Name) && baseType.Name != "object" && baseType.Name != "any" &&
+                            baseType.Name != type.Name)
+                            importSet.Add(baseType.Name);
                     }
 
-                    lines.Add($"  {prop.Name}{optional}: {tsType};");
-                }
+                    // 添加类型的 JSDoc 注释
+                    var typeCommentLines = GenerateJSDocComment(type.Summary, type.Remarks);
+                    lines.AddRange(typeCommentLines);
 
-                lines.Add("}");
+                    lines.Add(
+                        $"{(useInterface ? "export interface" : "export type")} {type.Name}{genericParams}{baseClause} {{");
+                    foreach (var prop in type.Properties)
+                    {
+                        string? tsType = null;
+                        int idx = -1;
+                        if (type.GenericArguments != null && prop.Type != null &&
+                            (idx = type.GenericArguments.IndexOf(prop.Type)) >= 0)
+                        {
+                            tsType = $"T{idx}";
+                        }
+                        else
+                        {
+                            tsType = MapCSharpTypeToTs(prop.Type);
+                            // 提取需要 import 的类型名
+                            var importableTypes = ExtractImportableTypeNames(tsType, types);
+                            foreach (var importType in importableTypes)
+                            {
+                                if (importType != type.Name) // 排除自身
+                                {
+                                    importSet.Add(importType);
+                                }
+                            }
+                        }
+
+                        var optional = prop.IsNullable || !prop.IsRequired ? "?" : "";
+
+                        // 添加属性的 JSDoc 注释
+                        var propCommentLines = GenerateJSDocComment(prop.Summary, prop.Remarks);
+                        if (propCommentLines.Count > 0)
+                        {
+                            // 为属性注释添加缩进
+                            var indentedLines = propCommentLines.Select(line =>
+                                line == "/**" || line == " */" ? $"  {line}" : $"  {line}");
+                            lines.AddRange(indentedLines);
+                        }
+
+                        lines.Add($"  {prop.Name}{optional}: {tsType};");
+                    }
+
+                    lines.Add("}");
+                }
+                
                 // 先写 import 语句
                 if (importSet.Count > 0)
                 {
@@ -604,10 +638,12 @@ public class ApiCodeGenerator
                 pendingTypes.Remove(key);
         } while (pendingTypes.Count > 0 && progress);
 
-        // 生成 index.ts，统一导出所有类型
+        // 生成 index.ts，统一导出所有类型（去重并保证顺序确定性）
         if (typeNames.Count > 0)
         {
-            var indexLines = typeNames.Select(n => $"export * from './{n}';");
+            // 去重并按名称排序，保证输出稳定且不重复
+            var distinctNames = typeNames.Distinct().OrderBy(n => n).ToList();
+            var indexLines = distinctNames.Select(n => $"export * from './{n}';");
             var indexPath = Path.Combine(typesDir, "index.ts");
             File.WriteAllText(indexPath, string.Join("\n", indexLines));
             Console.WriteLine($"[Type] Generated: {indexPath}");

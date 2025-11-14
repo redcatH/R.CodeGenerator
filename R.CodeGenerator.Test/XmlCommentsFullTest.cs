@@ -33,8 +33,8 @@ public partial class XmlDocumentationTest
         var service = new AspNetCoreApiDescriptionModelProviderService(apiDescriptionProvider);
         var model = service.GetApiDescriptionModel(includeTypes: true);
 
-        Console.WriteLine($"✅ 成功获取 {model.Apis.Count} 个API接口");
-        Console.WriteLine($"✅ 成功获取 {model.Types.Count} 个类型定义");
+        Console.WriteLine($" 成功获取 {model.Apis.Count} 个API接口");
+        Console.WriteLine($" 成功获取 {model.Types.Count} 个类型定义");
         Console.WriteLine();
 
         // 4. 展示API注释信息
@@ -101,11 +101,11 @@ public partial class XmlDocumentationTest
         
         // 生成类型定义
         generator.GenerateTypes(model.Types, config.TypesDir, config.UseInterface, config.NamespacePrefix);
-        Console.WriteLine($"✅ 类型定义已生成到: {config.TypesDir}");
+        Console.WriteLine($" 类型定义已生成到: {config.TypesDir}");
         
         // 生成API服务
         generator.GenerateApis(model.Apis, config.OutputDir, config.ImportLine, model.Types, config.UnwrapGenericTypes);
-        Console.WriteLine($"✅ API服务已生成到: {config.OutputDir}");
+        Console.WriteLine($" API服务已生成到: {config.OutputDir}");
 
         // 7. 显示生成的文件内容示例
         ShowGeneratedFilesSample(config);
