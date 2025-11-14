@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Globalization;
 using R.DescriptionModelGenerator;
 using Scriban;
 
@@ -537,11 +538,26 @@ public class ApiCodeGenerator
                         {
                             var enumValue = type.EnumValues[i];
                             var enumName = enumValue.Name ?? "";
-                            var enumVal = enumValue.Value ?? "0";
-                            
-                            // 最后一个成员不加逗号
-                            var comma = i < type.EnumValues.Count - 1 ? "," : "";
-                            lines.Add($"  {enumName} = \"{enumVal}\"{comma}");
+                                var enumVal = enumValue.Value ?? "0";
+
+                                // 最后一个成员不加逗号
+                                var comma = i < type.EnumValues.Count - 1 ? "," : "";
+
+                                // 尝试解析为整数/浮点数，优先整数，然后浮点；解析失败则回退为字符串字面量
+                                if (long.TryParse(enumVal, NumberStyles.Integer, CultureInfo.InvariantCulture, out var longVal))
+                                {
+                                    lines.Add($"  {enumName} = {longVal}{comma}");
+                                }
+                                else if (double.TryParse(enumVal, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var dblVal))
+                                {
+                                    // 保持 invariant culture 的格式
+                                    lines.Add($"  {enumName} = {dblVal.ToString(CultureInfo.InvariantCulture)}{comma}");
+                                }
+                                else
+                                {
+                                    // 回退为字符串枚举（仅在值无法解析为数字时）
+                                    lines.Add($"  {enumName} = \"{enumVal}\"{comma}");
+                                }
                         }
                     }
 
