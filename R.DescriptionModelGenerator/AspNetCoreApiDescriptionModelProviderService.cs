@@ -19,13 +19,19 @@ public class AspNetCoreApiDescriptionModelProviderService
     private readonly IApiDescriptionGroupCollectionProvider _apiDescriptionProvider;
     private readonly JsonSerializerOptions _jsonOptions;
     private readonly Dictionary<string, XPathDocument> _xmlDocs = new();
+    private readonly List<string> _includedNamespacePrefixes = new();
 
     public AspNetCoreApiDescriptionModelProviderService(
         IApiDescriptionGroupCollectionProvider apiDescriptionProvider,
-        IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>? jsonOptions = null)
+        IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>? jsonOptions = null,
+        List<string>? includedNamespacePrefixes = null)
     {
         _apiDescriptionProvider = apiDescriptionProvider;
         _jsonOptions = jsonOptions?.Value.SerializerOptions ?? new JsonSerializerOptions();
+        
+        // 如果没有指定命名空间前缀，则默认排除系统命名空间
+        _includedNamespacePrefixes = includedNamespacePrefixes ?? new List<string>();
+        
         LoadXmlDocumentation();
     }
 
@@ -49,6 +55,33 @@ public class AspNetCoreApiDescriptionModelProviderService
 
         // 3. 默认返回原属性名
         return property.Name;
+    }
+
+    /// <summary>
+    /// 判断类型是否应该被包含（用于过滤系统类型）
+    /// </summary>
+    private bool ShouldIncludeType(Type type)
+    {
+        // 如果没有配置命名空间前缀列表，则排除常见的系统命名空间
+        if (_includedNamespacePrefixes.Count == 0)
+        {
+            var typeNamespace = type.Namespace ?? string.Empty;
+            
+            // 排除系统命名空间
+            if (typeNamespace.StartsWith("System") ||
+                typeNamespace.StartsWith("Microsoft") ||
+                typeNamespace.StartsWith("Newtonsoft") ||
+                string.IsNullOrEmpty(typeNamespace))
+            {
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // 如果配置了命名空间前缀列表，只包含匹配的命名空间
+        var ns = type.Namespace ?? string.Empty;
+        return _includedNamespacePrefixes.Any(prefix => ns.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>
@@ -128,7 +161,7 @@ public class AspNetCoreApiDescriptionModelProviderService
                     if (!string.IsNullOrEmpty(paramName) && !string.IsNullOrEmpty(paramComment))
                     {
                         paramComments[paramName] = paramComment;
-                    }
+                    }  
                 }
             }
 
@@ -539,6 +572,10 @@ public class AspNetCoreApiDescriptionModelProviderService
     private void AddTypeRecursive(Dictionary<string, TypeDescriptionDto> types, Type type)
     {
         if (type == typeof(string) || type.IsPrimitive || type == typeof(object) || type == typeof(void)) return;
+        
+        // 过滤掉不需要的命名空间（系统类型等）
+        if (!ShouldIncludeType(type)) return;
+        
         if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
         {
             var underlying = Nullable.GetUnderlyingType(type);
@@ -568,6 +605,54 @@ public class AspNetCoreApiDescriptionModelProviderService
 
         var typeName = FriendlyTypeName(CalculateTypeName(type));
         if (string.IsNullOrEmpty(typeName) || types.ContainsKey(typeName)) return;
+
+        // 特殊处理：枚举类型 - 收集枚举成员和值
+    if (type.IsEnum)
+        {
+            // 取枚举成员名与对应的数值（统一为 Int64 字符串表示）
+            var enumValues = Enum.GetNames(type)
+                .Select(n => {
+                    var v = Enum.Parse(type, n);
+                    string valStr;
+                    try
+                    {
+                        valStr = Convert.ToInt64(v).ToString();
+                    }
+                    catch
+                    {
+                        // 若转换失败则回退为 ToString()
+                        valStr = v?.ToString() ?? string.Empty;
+                    }
+                    return new EnumValueDto { Name = n, Value = valStr };
+                }).ToList();
+
+            // 处理 pureName（去掉泛型后缀等）
+            var enumPureName = type.Name;
+            var enumTickIndex = enumPureName.IndexOf('`');
+            if (enumTickIndex > 0)
+            {
+                enumPureName = enumPureName.Substring(0, enumTickIndex);
+            }
+
+            var (enumTypeSummary, enumTypeRemarks) = GetTypeXmlDocumentation(type);
+
+            types[typeName] = new TypeDescriptionDto
+            {
+                Name = enumPureName,
+                Namespace = type.Namespace,
+                BaseType = (type.BaseType != null && type.BaseType != typeof(object))
+                    ? FriendlyTypeName(CalculateTypeName(type.BaseType))
+                    : null,
+                GenericArguments = new List<string>(),
+                Properties = new List<TypePropertyDescriptionDto>(),
+                Summary = enumTypeSummary,
+                Remarks = enumTypeRemarks,
+                EnumValues = enumValues
+            };
+
+            return;
+        }
+
         var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(p => p.CanRead)
             .Select(p =>

@@ -8,6 +8,10 @@ public class TypeDescriptionDto
     public List<string> GenericArguments { get; set; } = new(); // 泛型参数类型全名
     public List<TypePropertyDescriptionDto> Properties { get; set; } = new();
     /// <summary>
+    /// 如果是枚举类型，枚举成员与其对应的数值
+    /// </summary>
+    public List<EnumValueDto> EnumValues { get; set; } = new();
+    /// <summary>
     /// 类型的XML注释
     /// </summary>
     public string? Summary { get; set; }
