@@ -62,12 +62,52 @@ public class AspNetCoreApiDescriptionModelProviderService
     /// </summary>
     private bool ShouldIncludeType(Type type)
     {
-        // 如果没有配置命名空间前缀列表，则排除常见的系统命名空间
+        // 先尝试去除外层常见包装类型（Task<>, ActionResult<>, Nullable<> 等），再判断实际类型的命名空间
+        if (type == null) return false;
+
+        // 去除 Task 包装
+        var actual = UnwrapTask(type) ?? type;
+
+        // 去除 ActionResult 包装
+        var unwrappedAction = UnwrapActionResult(actual);
+        if (unwrappedAction == null)
+        {
+            // 如果解包后为 null，表示这是 IActionResult/JsonResult/NoContentResult 等，前端通常不需要此类型
+            return false;
+        }
+        actual = unwrappedAction;
+
+        // 去除 Nullable<T>
+        if (actual.IsGenericType && actual.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+            var underlying = Nullable.GetUnderlyingType(actual);
+            if (underlying != null)
+                actual = underlying;
+        }
+
+        // 如果是数组或集合，取元素类型进行判断
+        if (typeof(IEnumerable).IsAssignableFrom(actual) && actual != typeof(string))
+        {
+            if (actual.IsArray)
+            {
+                var elem = actual.GetElementType();
+                if (elem != null)
+                    actual = elem;
+            }
+            else if (actual.IsGenericType)
+            {
+                var args = actual.GetGenericArguments();
+                if (args.Length == 1)
+                    actual = args[0];
+            }
+        }
+
+        // 现在根据实际类型的命名空间判断是否需要包含
+        var typeNamespace = actual.Namespace ?? string.Empty;
+
         if (_includedNamespacePrefixes.Count == 0)
         {
-            var typeNamespace = type.Namespace ?? string.Empty;
-            
-            // 排除系统命名空间
+            // 排除常见的系统命名空间
             if (typeNamespace.StartsWith("System") ||
                 typeNamespace.StartsWith("Microsoft") ||
                 typeNamespace.StartsWith("Newtonsoft") ||
@@ -75,12 +115,12 @@ public class AspNetCoreApiDescriptionModelProviderService
             {
                 return false;
             }
-            
+
             return true;
         }
-        
+
         // 如果配置了命名空间前缀列表，只包含匹配的命名空间
-        var ns = type.Namespace ?? string.Empty;
+        var ns = typeNamespace;
         return _includedNamespacePrefixes.Any(prefix => ns.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
     }
 
