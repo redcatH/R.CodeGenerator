@@ -44,8 +44,12 @@ public class ApiCodeGenerator
             return csharpType;
         }
 
+        // 提取数组标记 []
+        bool isArray = csharpType.EndsWith("[]");
+        string typeToMap = isArray ? csharpType.Substring(0, csharpType.Length - 2) : csharpType;
+
         // 使用正则表达式解析泛型类型
-        var typeInfo = ParseGenericType(csharpType);
+        var typeInfo = ParseGenericType(typeToMap);
 
         // 映射基础类型
         var mappedType = MapBasicType(typeInfo.BaseType);
@@ -77,7 +81,8 @@ public class ApiCodeGenerator
             return "Promise<void>";
         }
 
-        return mappedType;
+        // 返回前附加数组标记
+        return isArray ? $"{mappedType}[]" : mappedType;
     }
 
     /// <summary>
